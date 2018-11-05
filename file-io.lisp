@@ -6,7 +6,7 @@
        (multiple-value-bind
          (line end?)
          (read-line in nil)
-         (if end? 
+         (if end?
            (cons line acc)
            (helper in (cons line acc))))))
     (reverse (remove-if #'null (helper (open filename) '())))))
@@ -21,5 +21,18 @@
          (if (null entry)
            acc
            (helper in (cons entry acc))))))
-    (reverse (helper (open filename) '())))) 
+    (reverse (helper (open filename) '()))))
+
+;; Reads s-expressions from a character stream until exhausted.
+;; It will raise an error if the stream does not represent a sequence of
+;; s-expresssions.
+(defun read-sexprs-from-stream (s)
+  (labels
+    ((helper
+       (in acc)
+       (let ((e (read in nil)))
+         (if (null e)
+           acc
+           (helper in (cons e acc))))))
+    (reverse (helper s))))
 
