@@ -1,0 +1,6 @@
+.nfs*
+.*.swp
+tags
+*.pyc
+*~
+
