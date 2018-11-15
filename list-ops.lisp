@@ -21,3 +21,8 @@
 (defun remove-nth (n lst)
   (append (subseq lst 0 n) (nthcdr (1+ n) lst)))
 
+;; Returns a list of lst with cndn filter out followed by lst with only cndn.
+(defun split-by-cond (lst cndn)
+  (list (remove-if cndn lst)
+        (remove-if-not cndn lst)))
+
