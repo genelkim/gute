@@ -1,10 +1,6 @@
 ;; Reachability Indexing
 ;; Schubert, 2000-10-24
 
-(defpackage :util
-  (:export :reachable
-           :depth-label-graph))
-
 (in-package :util)
 
 (defun reachable (node1 node2 inds ints)

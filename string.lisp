@@ -1,4 +1,6 @@
 
+(in-package :util)
+
 ;; List of characters that constitute whitespace in the trim functions.
 (defparameter *trim-whitespace-chars*
   '(#\Space #\Newline #\Backspace #\Tab

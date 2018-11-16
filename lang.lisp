@@ -1,26 +1,16 @@
+;; Textual/Linguistic utility functions from Lore.  The defpackage was
+;; refactored and some comments have been added by Gene (2018-11-15).
+;;
+;; ```Original Header Comment```
 ;; Textual/Linguistic Utility Functions
 ;; Jonathan Gordon, Benjamin Van Durme, Phil Michalak, Fabrizio Morbini
 ;;   The functions for the plural and singular processing are derived
 ;;   from the Perl package Lingua-EN-Inflect-1.90 by Damian Conway.
 
-(defpackage :util
-  (:export :vowel?
-           :consonant?
-           :add-indefinite
-           :indefinite-article
-           :plural?
-           :singular?
-           :plural-of
-           :singular-of
-           :simple-past
-           :past-participle
-           :present-singular
-           :apply-ing
-           :transform-number
-           :capitalize-words))
-
 (in-package :util)
 
+;; Give cl-ppcre a nickname.
+(defpackage cl-ppcre (:nicknames re))
 
 ;; Words with a silent initial 'h': use 'an'.
 (defconstant +consonant-exceptions+

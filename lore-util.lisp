@@ -1,32 +1,17 @@
+;; Core utility functions from Lore.  The defpackage was refactored and some
+;; comments have been added by Gene (2018-11-15).
+;;
+;; ```Original Header Comment```
 ;; Lore: General Utility Functions
 ;; Benjamin Van Durme, 2007-10-12
 ;; Jonathan Gordon, 2014-01-06
 
-(defpackage :util
-  (:use :common-lisp :alexandria)
-  (:export :get-line
-           :mintersection
-           :tree-from-string
-           :intern-symbols-recursive
-           :extract-sentence
-           :contains-underscore
-           :split-at-char
-           :split-at-underscore
-           :subst-in-symb
-           :memberp
-           :prune
-           :safe-car :safe-first :safe-second :safe-third :safe-third
-           :safe-fourth :safe-fifth :safe-cdr :safe-cddr :safe-cdddr
-           :sub
-           :symb
-           :mkstr
-           :slurp
-           :bind :in-case-error :with-outfile :with-infile :do-lines :do-lines-slurp))
-
 (in-package :util)
 
-(defconstant eof (gensym))
+;; Give cl-ppcre a nickname.
+(defpackage cl-ppcre (:nicknames re))
 
+(defconstant eof (gensym))
 
 (defmacro do-lines (var path &rest body)
   (with-gensyms (p str)

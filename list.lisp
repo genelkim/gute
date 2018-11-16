@@ -1,3 +1,6 @@
+
+(in-package :util)
+
 ;; Returns a slice of the list with given starting and ending indices,
 ;; inclusive and exclusive, respectively.
 (defun slice (lst start end)

@@ -1,3 +1,6 @@
+
+(in-package :util)
+
 ;; Reads a file line by line and return a list of strings.
 (defun read-file-lines (filename)
   (labels
