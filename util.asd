@@ -7,6 +7,8 @@
                (:file "io")
                (:file "list")
                (:file "string")
+               (:file "sexpr")
+               (:file "ttt")
                (:file "lore-util")
                (:file "lang")
                (:file "reachability-indexing")))

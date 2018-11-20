@@ -22,6 +22,13 @@
     :left-trim
     :right-trim
 
+    ;; sexpr.lisp
+    :extract-category
+
+    ;; ttt.lisp
+    :hide-ttt-ops
+    :unhide-ttt-ops
+
     ;; lore-util.lisp
     :get-line
     :mintersection
