@@ -25,3 +25,7 @@
                     *trim-whitespace-chars*)))
   (string-right-trim trimlist str)))
 
+;; Converts a symbol to the corresponding string.
+(defun sym2str (sym)
+  (format nil "~s" sym))
+

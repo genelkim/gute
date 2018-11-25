@@ -21,6 +21,7 @@
     :trim
     :left-trim
     :right-trim
+    :sym2str
 
     ;; sexpr.lisp
     :extract-category
@@ -28,6 +29,10 @@
     ;; ttt.lisp
     :hide-ttt-ops
     :unhide-ttt-ops
+
+    ;; symbol.lisp
+    :split-into-atoms
+    :fuse-into-atom
 
     ;; lore-util.lisp
     :get-line

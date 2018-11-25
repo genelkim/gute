@@ -9,6 +9,7 @@
                (:file "string")
                (:file "sexpr")
                (:file "ttt")
+               (:file "symbol")
                (:file "lore-util")
                (:file "lang")
                (:file "reachability-indexing")))
