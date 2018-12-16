@@ -22,10 +22,10 @@
      (asdf:perform (make-instance 'asdf:compile-op) c)
      (call-next-method))))
 
-(asdf:initialize-source-registry
-  `(:source-registry
-      :ignore-inherited-configuration
-      (:tree ,(namestring (merge-pathnames "./")))))
+;(asdf:initialize-source-registry
+;  `(:source-registry
+;      :ignore-inherited-configuration
+;      (:tree ,(namestring (merge-pathnames "./")))))
 
 ;; Adds the directory containing load.lisp to the "PATH" of asdf, so
 ;; we can load *util* from any directory.

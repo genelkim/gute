@@ -29,3 +29,15 @@
 (defun sym2str (sym)
   (format nil "~s" sym))
 
+;; Converts a list to a string with a given delimiter between elements.
+;; Elements are represented with the usual string representation.
+(defun list-to-string (lst delim &optional (remove-newlines nil))
+  (reduce
+    #'(lambda (x y)
+        (concatenate 'string x delim y))
+    (mapcar #'(lambda (a)
+                (if remove-newlines
+                  ;; TODO: remove dependency to allegro re package.
+                  (replace-re (format nil "~s" a) "\\n" " ")
+                  (format nil "~s" a))) lst)))
+

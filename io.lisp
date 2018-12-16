@@ -14,6 +14,20 @@
            (helper in (cons line acc))))))
     (reverse (remove-if #'null (helper (open filename) '())))))
 
+;; Reads a file line by line and return a list of strings.
+;; Done in a loop so you won't get a stack overflow even with bad compiler
+;; parameters.
+(defun read-file-lines2 (filename)
+  (let ((fh (open filename))
+        (done nil)
+        acc)
+    (loop while (not done)
+          do (multiple-value-bind (line end?) (read-line fh nil)
+               (setq done end?)
+               (setq acc (cons line acc))))
+    (reverse acc)))
+
+
 ;; Reads all s-expressions from a character stream until exhausted.
 ;; It will raise an error if the stream does not represent a sequence of
 ;; s-expresssions.
@@ -42,4 +56,14 @@
 (defun read-all-from-string (str)
   (with-input-from-string (s str)
     (read-all-from-stream s)))
+
+;; Writes a string to a file.
+(defun write-to-file (str filename)
+  (with-open-file (file :direction :output)
+    (format fh str)))
+
+;; Writes a list to a file.
+;; Depends on write-to-file.
+(defun write-list-to-file (lst filename &optional (sep "~%"))
+  (write-to-fie (list-to-string lst sep) filename))
 

@@ -8,9 +8,12 @@
   (:export
     ;; io.lisp
     :read-file-lines
+    :read-file-lines2
     :read-all-from-stream
     :read-all-from-file
     :read-all-from-string
+    :write-to-file
+    :write-list-to-file
 
     ;; list.lisp
     :slice
@@ -22,6 +25,7 @@
     :left-trim
     :right-trim
     :sym2str
+    :list-to-string
 
     ;; sexpr.lisp
     :extract-category

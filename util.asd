@@ -4,8 +4,8 @@
 (asdf:defsystem :util
   :depends-on (:alexandria :cl-ppcre)
   :components ((:file "package")
-               (:file "io")
                (:file "list")
+               (:file "io")
                (:file "string")
                (:file "sexpr")
                (:file "ttt")
