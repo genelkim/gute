@@ -37,6 +37,9 @@
     ;; symbol.lisp
     :split-into-atoms
     :fuse-into-atom
+    *intern-caller-pkg*
+    :inout-intern
+    :in-intern
 
     ;; lore-util.lisp
     :get-line
