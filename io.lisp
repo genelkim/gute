@@ -65,5 +65,5 @@
 ;; Writes a list to a file.
 ;; Depends on write-to-file.
 (defun write-list-to-file (lst filename &optional (sep "~%"))
-  (write-to-fie (list-to-string lst sep) filename))
+  (write-to-file (list-to-string lst sep) filename))
 
