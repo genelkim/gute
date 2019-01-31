@@ -26,8 +26,8 @@
 ;;          if nil, it defaults to the value *ulf-lib-caller-pkg*
 ;; body: body of the code (using midval)
 ;; outval: immediate output of the body
-(defmacro inout-intern ((bgnval midval &key (callpkg nil)) &body body)
-  `(let* ((,midval (intern-symbols-recursive ,bgnval :ulf-lib))
+(defmacro inout-intern ((bgnval midval inpkg &key (callpkg nil)) &body body)
+  `(let* ((,midval (intern-symbols-recursive ,bgnval inpkg))
           (outval (progn ,@body)))
      (cond
        (,callpkg (intern-symbols-recursive outval ,callpkg))
@@ -36,7 +36,7 @@
 ;; Same as inout-intern macro but only performs the pre- interning portion.
 ;; Interns the incoming symbols and stores it in midval before evaluating
 ;; the body.
-(defmacro in-intern ((bgnval midval) &body body)
-  `(let* ((,midval (intern-symbols-recursive ,bgnval :ulf-lib)))
+(defmacro in-intern ((bgnval midval inpkg) &body body)
+  `(let* ((,midval (intern-symbols-recursive ,bgnval inpkg)))
      ,@body))
 
