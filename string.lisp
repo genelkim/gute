@@ -38,6 +38,6 @@
     (mapcar #'(lambda (a)
                 (if remove-newlines
                   ;; TODO: remove dependency to allegro re package.
-                  (replace-re (format nil "~s" a) "\\n" " ")
+                  (cl-user::replace-re (format nil "~s" a) "\\n" " ")
                   (format nil "~s" a))) lst)))
 

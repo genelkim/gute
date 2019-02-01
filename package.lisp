@@ -4,7 +4,7 @@
 (in-package :cl-user)
 
 (defpackage :util
-  (:use :cl :alexandria :cl-ppcre)
+  (:use :cl :cl-user :alexandria :cl-ppcre)
   (:export
     ;; io.lisp
     :read-file-lines

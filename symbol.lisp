@@ -27,7 +27,7 @@
 ;; body: body of the code (using midval)
 ;; outval: immediate output of the body
 (defmacro inout-intern ((bgnval midval inpkg &key (callpkg nil)) &body body)
-  `(let* ((,midval (intern-symbols-recursive ,bgnval inpkg))
+  `(let* ((,midval (intern-symbols-recursive ,bgnval ,inpkg))
           (outval (progn ,@body)))
      (cond
        (,callpkg (intern-symbols-recursive outval ,callpkg))
@@ -37,6 +37,6 @@
 ;; Interns the incoming symbols and stores it in midval before evaluating
 ;; the body.
 (defmacro in-intern ((bgnval midval inpkg) &body body)
-  `(let* ((,midval (intern-symbols-recursive ,bgnval inpkg)))
+  `(let* ((,midval (intern-symbols-recursive ,bgnval ,inpkg)))
      ,@body))
 
