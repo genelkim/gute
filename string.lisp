@@ -41,3 +41,23 @@
                   (cl-user::replace-re (format nil "~s" a) "\\n" " ")
                   (format nil "~s" a))) lst)))
 
+;; Levenshtein edit distance algorithm.
+;; From https://rosettacode.org/wiki/Levenshtein_distance#Common_Lisp
+;; I changed the inner 'defun' to 'labels' so we silence some warnings.
+(defun levenshtein (a b)
+  (let* ((la  (length a))
+         (lb  (length b))
+         (rec (make-array (list (1+ la) (1+ lb)) :initial-element nil)))
+    (labels
+      ((leven (x y)
+              (cond
+                ((zerop x) y)
+                ((zerop y) x)
+                ((aref rec x y) (aref rec x y))
+                (t (setf (aref rec x y)
+                         (+ (if (char= (char a (- la x)) (char b (- lb y))) 0 1)
+                            (min (leven (1- x) y)
+                                 (leven x (1- y))
+                                 (leven (1- x) (1- y)))))))))
+      (leven la lb))))
+
