@@ -14,6 +14,7 @@
     :read-all-from-string
     :write-to-file
     :write-list-to-file
+    :princln
 
     ;; list.lisp
     :slice
