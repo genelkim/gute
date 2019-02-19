@@ -12,5 +12,6 @@
                (:file "symbol")
                (:file "lore-util")
                (:file "lang")
-               (:file "reachability-indexing")))
+               (:file "reachability-indexing")
+               (:file "hashtable")))
 

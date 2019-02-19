@@ -67,3 +67,9 @@
 (defun write-list-to-file (lst filename &optional (sep "~%"))
   (write-to-file (list-to-string lst sep) filename))
 
+;; Similar to "println" in Java. The name princln is meant to reflect the CL
+;; naming conventions for prints.
+(defun princln (x)
+  (princ x)
+  (format t "~%"))
+

@@ -14,6 +14,7 @@
     :read-all-from-string
     :write-to-file
     :write-list-to-file
+    :princln
 
     ;; list.lisp
     :slice
@@ -26,6 +27,7 @@
     :right-trim
     :sym2str
     :list-to-string
+    :levenshtein
 
     ;; sexpr.lisp
     :extract-category
@@ -80,5 +82,9 @@
     ;; reachability-indexing.lisp
     :reachable
     :depth-label-graph
+
+    ;; hashtable.lisp
+    :print-hash-table-readably
+    :print-ht
     ))
 
