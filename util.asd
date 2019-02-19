@@ -2,7 +2,7 @@
 ;; Started ~2018-11-15
 
 (asdf:defsystem :util
-  :depends-on (:alexandria :cl-ppcre)
+  :depends-on (:alexandria (:version #:cl-ppcre "2.0.4"))
   :components ((:file "package")
                (:file "list")
                (:file "io")
