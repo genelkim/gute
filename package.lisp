@@ -4,7 +4,10 @@
 (in-package :cl-user)
 
 (defpackage :util
-  (:use :cl :cl-user :alexandria :cl-ppcre)
+  (:use :cl :cl-user)
+  (:shadowing-import-from :alexandria)
+  (:shadowing-import-from :cl-ppcre)
+  (:shadowing-import-from :cl-mathstats)
   (:export
     ;; io.lisp
     :read-file-lines
@@ -78,6 +81,8 @@
     :apply-ing
     :transform-number
     :capitalize-words
+    :punctuation-p
+    :remove-punctuation
 
     ;; reachability-indexing.lisp
     :reachable
@@ -86,5 +91,14 @@
     ;; hashtable.lisp
     :print-hash-table-readably
     :print-ht
+
+    ;; function.lisp
+    :compose
+
+    ;; stats.lisp
+    :precision
+    :group-precisions
+    :macro-precision
+    :micro-precision
     ))
 

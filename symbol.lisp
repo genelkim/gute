@@ -40,3 +40,16 @@
   `(let* ((,midval (intern-symbols-recursive ,bgnval ,inpkg)))
      ,@body))
 
+;; From elf-from-sentences (written by Lenhart Schubert of Jonathan Gordon
+;; probably).
+(defun preslash-unsafe-chars (char-string)
+  "Prefix '\' to unsafe characters # ` ' : ; , . \ | in 'aString'."
+  (let ((chars (coerce char-string 'list)) result)
+       (dolist (ch chars)
+           (cond ((alphanumericp ch) (push ch result))
+                 ((member ch '(#\( #\) #\")) (push ch result)); unbalanced "
+                 ((member ch
+                   '(#\# #\` #\' #\: #\; #\, #\. #\\ #\|) )
+                  (push #\\ result) (push ch result) )
+                 (T (push ch result)) ))
+        (coerce (reverse result) 'string)))

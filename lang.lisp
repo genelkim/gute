@@ -5275,3 +5275,14 @@
                      cap)))
     (setf cap (sub "'S" "'s" cap))
     cap))
+
+
+;; Gene Kim (2-14-2019): Below two functions are from unifgram.lisp of Peter
+;; Norvig's Paradigms of AI Programming.
+
+(defun punctuation-p (char) (find char "*_.,;:`!?#-()\\\""))
+
+(defun remove-punctuation (string)
+  "Replace punctuation with spaces in string."
+  (substitute-if #\space #'punctuation-p string))
+

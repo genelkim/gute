@@ -2,7 +2,7 @@
 ;; Started ~2018-11-15
 
 (asdf:defsystem :util
-  :depends-on (:alexandria :cl-ppcre)
+  :depends-on (:alexandria :cl-ppcre :cl-mathstats)
   :components ((:file "package")
                (:file "list")
                (:file "io")
@@ -13,5 +13,7 @@
                (:file "lore-util")
                (:file "lang")
                (:file "reachability-indexing")
-               (:file "hashtable")))
+               (:file "hashtable")
+               (:file "function")
+               (:file "stats")))
 
