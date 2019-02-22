@@ -2,7 +2,8 @@
 ;; Started ~2018-11-15
 
 (asdf:defsystem :util
-  :depends-on (:alexandria :cl-ppcre :cl-mathstats)
+  :depends-on (:alexandria (:version #:cl-ppcre "2.0.4")
+               :cl-ppcre :cl-mathstats)
   :components ((:file "package")
                (:file "list")
                (:file "io")
