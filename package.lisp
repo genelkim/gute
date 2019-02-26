@@ -34,6 +34,8 @@
 
     ;; sexpr.lisp
     :extract-category
+    :tree-find
+    :tree-find-if
 
     ;; ttt.lisp
     :hide-ttt-ops
