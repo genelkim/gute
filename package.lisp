@@ -102,5 +102,11 @@
     :group-precisions
     :macro-precision
     :micro-precision
+
+    ;; memo.lisp
+    :memoize
+    :memo
+    :clear-memoize
+    :defun-memo
     ))
 

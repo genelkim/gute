@@ -16,5 +16,6 @@
                (:file "reachability-indexing")
                (:file "hashtable")
                (:file "function")
-               (:file "stats")))
+               (:file "stats")
+               (:file "memo")))
 
