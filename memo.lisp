@@ -2,7 +2,7 @@
 (in-package :util)
 
 ;; Memoization facility from Peter Norvig's PIOP
-;; http://norvig.com/paip/unifgram.lisp
+;; http://norvig.com/paip/auxfns.lisp
 ;; Defaults have been changed for more flexibility.
 
 (defmacro defun-memo (fn args &body body)
