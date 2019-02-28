@@ -6,9 +6,9 @@
 ; Useful for applying TTT to processing symbols as list of separate
 ; symbolic characters. Caveat: Watch out for {!,~,^,*,+,?} as part of 'atm'
 ; as they are specially interpreted by TTT.
- (mapcar #'intern 
-    (mapcar #'(lambda (ch) (format nil "~a" ch)) 
-              (coerce (string atm) 'list))))
+  (mapcar #'intern
+          (mapcar #'(lambda (ch) (format nil "~a" ch))
+                  (coerce (mkstr atm) 'list))))
 
 (defun fuse-into-atom (atm-list); tested
 ;``````````````````````````````
@@ -53,3 +53,4 @@
                   (push #\\ result) (push ch result) )
                  (T (push ch result)) ))
         (coerce (reverse result) 'string)))
+

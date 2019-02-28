@@ -26,8 +26,10 @@
   (string-right-trim trimlist str)))
 
 ;; Converts a symbol to the corresponding string.
-(defun sym2str (sym)
-  (format nil "~s" sym))
+(defun sym2str (sym &key (preserve-package nil))
+  (if preserve-package
+    (format nil "~s" sym)
+    (format nil "~s" (intern-symbols-recursive sym *package*))))
 
 ;; Converts a list to a string with a given delimiter between elements.
 ;; Elements are represented with the usual string representation.
