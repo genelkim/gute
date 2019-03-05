@@ -3,8 +3,9 @@
 
 (asdf:defsystem :util
   :depends-on (:alexandria (:version #:cl-ppcre "2.0.4")
-               :cl-ppcre :cl-mathstats)
+               :cl-mathstats)
   :components ((:file "package")
+               (:file "general")
                (:file "list")
                (:file "io")
                (:file "string")

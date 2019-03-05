@@ -10,15 +10,16 @@
 (in-package :util)
 
 ;; Give cl-ppcre a nickname.
-(defpackage cl-ppcre (:nicknames re))
+;;(defpackage cl-ppcre (:nicknames re))
+(add-nickname "CL-PPCRE" "RE")
 
 ;; Words with a silent initial 'h': use 'an'.
-(defconstant +consonant-exceptions+
+(define-constant +consonant-exceptions+
   '(honor honest heir hour honorable hourly heiress honored hour-long
     x-ray xray))
 
 ;; Words with an initial vowel that take 'a'.
-(defconstant +vowel-exceptions+
+(define-constant +vowel-exceptions+
   '(one once onetime un us))
 
 
@@ -34,7 +35,7 @@
 
 (defun add-indefinite (common-noun)
   "Concatenation of the common-noun with the proper indefinite article."
-  (declaim (inline))
+  (declare (inline))
   (mkstr (indefinite-article common-noun) " " common-noun))
 
 
@@ -80,7 +81,7 @@
           (t 'a))))
 
 
-(defconstant +number-regexps+
+(define-constant +number-regexps+
   (mapcar #'(lambda (x)
               (apply
                #'(lambda (sg-pattern pl-pattern sg-parameters pl-parameters)
@@ -418,9 +419,9 @@
     (case number
       ;; if common-noun is becoming plural, then it currently matches singular,
       ;; and vice versa
-      ('plural (setf scanner (first number-entry))
+      (plural (setf scanner (first number-entry))
                (setf parameters (third number-entry)))
-      ('singular (setf scanner (second number-entry))
+      (singular (setf scanner (second number-entry))
                  (setf parameters (fourth number-entry)))
       (otherwise
        (error "transform-number requires 'number' to be either 'singular or 'plural")))

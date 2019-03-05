@@ -9,40 +9,41 @@
 (in-package :util)
 
 ;; Give cl-ppcre a nickname.
-(defpackage cl-ppcre (:nicknames re))
+;;(defpackage cl-ppcre (:nicknames re))
+(add-nickname "CL-PPCRE" "RE")
 
-(defconstant eof (gensym))
+(define-constant eof (gensym))
 
 (defmacro do-lines (var path &rest body)
-  (with-gensyms (p str)
+  (alexandria:with-gensyms (p str)
     `(let ((,p (probe-file ,path)))
        (when ,p
          (with-infile ,str ,p
-           (do ((,var (read-line ,str nil util::eof)
-                      (read-line ,str nil util::eof)))
-               ((eql ,var util::eof))
+           (do ((,var (read-line ,str nil ,eof)
+                      (read-line ,str nil ,eof)))
+               ((eql ,var ,eof))
              ,@body))))))
 
 
 (defmacro do-lines-slurp (var path &rest body)
-  (with-gensyms (p str)
+  (alexandria:with-gensyms (p str)
     `(let ((,p (slurp ,path)))
        (with-input-from-string (,str ,p)
-         (do ((,var (read-line ,str nil util::eof)
-                    (read-line ,str nil util::eof)))
-             ((eql ,var util::eof))
+         (do ((,var (read-line ,str nil ,eof)
+                    (read-line ,str nil ,eof)))
+             ((eql ,var ,eof))
            ,@body)))))
 
 
 (defmacro with-infile (var fname &rest body)
-  (with-gensyms (f)
+  (alexandria:with-gensyms (f)
     `(let ((,f ,fname))
        (with-open-file (,var ,f :direction :input)
          ,@body))))
 
 
 (defmacro with-outfile (var fname &rest body)
-  (with-gensyms (f)
+  (alexandria:with-gensyms (f)
     `(let ((,f ,fname))
        (with-open-file (,var ,f :direction :output
                                 :if-exists :supersede)
@@ -54,7 +55,7 @@
 
 
 (defmacro in-case-error (expr err)
-  (with-gensyms (val cond)
+  (alexandria:with-gensyms (val cond)
     `(bind (,val ,cond) (ignore-errors ,expr)
          (if (typep ,cond 'error)
                (progn
@@ -71,14 +72,12 @@
 
 
 (defun intern-symbols-recursive (tree package)
+  ;(list tree package))
   (cond ((null tree) nil)
         ((or (numberp tree) (stringp tree) (functionp tree))
          tree)
-        ((atom tree)
-         (if (equal (find-package :keyword) ; don't intern keywords
-                    (symbol-package tree))
-             tree
-           (intern tree package)))
+        ((keywordp tree) tree) ; don't intern keywords
+        ((atom tree) (intern (symbol-name tree) package))
         ((atom (cdr tree)) ; A dotted pair
          (cons (intern-symbols-recursive (car tree) package)
                (intern-symbols-recursive (cdr tree) package)))

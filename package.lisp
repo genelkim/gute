@@ -9,6 +9,11 @@
   (:shadowing-import-from :cl-ppcre)
   (:shadowing-import-from :cl-mathstats)
   (:export
+    ;; general.lisp
+    :define-constant
+    :add-nickname
+    :safe-intern
+
     ;; io.lisp
     :read-file-lines
     :read-file-lines2

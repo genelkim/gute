@@ -39,12 +39,12 @@
 (defun tree-find (tree sym &key (test #'eql))
   (second (extract-category tree
             #'(lambda (x) (funcall test sym x))
-            #'(lambda (x) nil))))
+            #'nilfn)))
 
 
 ;; Returns subexpressions in tree that satisfy cndfn, similar to how subst-if
 ;; substitutes expression that satisfy a condition.
 (defun tree-find-if (tree cndfn)
   (second (extract-category tree cndfn
-            #'(lambda (x) nil))))
+            #'nilfn)))
 

@@ -1,6 +1,10 @@
 
 (in-package :util)
 
+;; Give cl-ppcre a nickname.
+;(defpackage cl-ppcre (:nicknames re))
+(add-nickname "CL-PPCRE" "RE")
+
 ;; List of characters that constitute whitespace in the trim functions.
 (defparameter *trim-whitespace-chars*
   '(#\Space #\Newline #\Backspace #\Tab
@@ -40,26 +44,28 @@
     (mapcar #'(lambda (a)
                 (if remove-newlines
                   ;; TODO: remove dependency to allegro re package.
-                  (cl-user::replace-re (format nil "~s" a) "\\n" " ")
-                  (format nil "~s" a))) lst)))
+                  ;(cl-user::replace-re (format nil "~s" a) "\\n" " ")
+                  (cl-ppcre:regex-replace-all (format nil "~s" a) "\\n" " ")
+                  (format nil "~s" a)))
+            lst)))
 
 ;; Levenshtein edit distance algorithm.
 ;; From https://rosettacode.org/wiki/Levenshtein_distance#Common_Lisp
 ;; I changed the inner 'defun' to 'labels' so we silence some warnings.
-(defun levenshtein (a b)
-  (let* ((la  (length a))
-         (lb  (length b))
-         (rec (make-array (list (1+ la) (1+ lb)) :initial-element nil)))
-    (labels
-      ((leven (x y)
-              (cond
-                ((zerop x) y)
-                ((zerop y) x)
-                ((aref rec x y) (aref rec x y))
-                (t (setf (aref rec x y)
-                         (+ (if (char= (char a (- la x)) (char b (- lb y))) 0 1)
-                            (min (leven (1- x) y)
-                                 (leven x (1- y))
-                                 (leven (1- x) (1- y)))))))))
-      (leven la lb))))
+;(defun levenshtein (a b)
+;  (let* ((la  (length a))
+;         (lb  (length b))
+;         (rec (make-array (list (1+ la) (1+ lb)) :initial-element nil)))
+;    (labels
+;      ((leven (x y)
+;              (cond
+;                ((zerop x) y)
+;                ((zerop y) x)
+;                ((aref rec x y) (aref rec x y))
+;                (t (setf (aref rec x y)
+;                         (+ (if (char= (char a (- la x)) (char b (- lb y))) 0 1)
+;                            (min (leven (1- x) y)
+;                                 (leven x (1- y))
+;                                 (leven (1- x) (1- y)))))))))
+;      (leven la lb))))
 
