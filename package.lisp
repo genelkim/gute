@@ -13,6 +13,13 @@
     :define-constant
     :add-nickname
     :safe-intern
+    :lisp-impl
+    :sbcl-impl?
+    :acl-impl?
+    :cmucl-impl?
+    :sbcl
+    :acl
+    :cmucl
 
     ;; io.lisp
     :read-file-lines
@@ -49,7 +56,7 @@
     ;; symbol.lisp
     :split-into-atoms
     :fuse-into-atom
-    *intern-caller-pkg*
+    :*intern-caller-pkg*
     :inout-intern
     :in-intern
 
