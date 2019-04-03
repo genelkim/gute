@@ -202,8 +202,8 @@
   "Add integer I to the INTS list of vertex R, maintaining maximal,
    ascending, disjoint intervals."
 
-  (let ((intr (get r ints)) result)
-    (do (tail j k) ((or (null intr) (< (- i 2) (cdar intr))))
+  (let ((intr (get r ints)) result tail j k)
+    (do () ((or (null intr) (< (- i 2) (cdar intr))))
       (push (pop intr) result) )
     (if (or (null intr) (< (+ i 1) (caar intr)))
         (setq tail (cons (cons i i) intr))
