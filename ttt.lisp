@@ -14,16 +14,17 @@
 ; shouldn't have the brackets removed when we ultimately "unhide"
 ; the hidden symbols in a formula.
 ;
-  (let (str chars)
+  (let (str chars pkg)
        (cond ((symbolp wff)
+              (setf pkg (symbol-package wff))
               (setq str (string wff))
               (setq chars (coerce str 'list))
               (cond ((member (car chars) '(#\! #\+ #\? #\* #\@ #\~))
-                     (intern (concatenate 'string "[" str "]")))
+                     (intern (concatenate 'string "[" str "]") pkg))
                     ((and (eq (car chars) #\{) (eq (second chars) #\}))
-                     (intern (concatenate 'string "[" str "]")))
+                     (intern (concatenate 'string "[" str "]") pkg))
                     ((and (eq (car chars) #\<) (eq (second chars) #\>))
-                     (intern (concatenate 'string "[" str "]")))
+                     (intern (concatenate 'string "[" str "]") pkg))
                     (t wff)))
              ((atom wff) wff)
              (t (cons (hide-ttt-ops (car wff)) (hide-ttt-ops (cdr wff)))))
@@ -35,8 +36,9 @@
 ; Remove the square brackets that have been added around ttt symbols
 ; in wff by 'hide-ttt-ops':
 ;
- (let (str chars)
+ (let (str chars pkg)
       (cond ((symbolp wff)
+             (setf pkg (symbol-package wff))
              (setq str (string wff))
              (setq chars (coerce str 'list))
              (cond ((or (not (eq (car chars) #\[))
@@ -45,11 +47,11 @@
                       (setq str (coerce chars 'string))
                       (cond ((null chars) wff)
                             ((member (car chars) '(#\! #\+ #\? #\* #\@ #\~))
-                             (intern str))
+                             (intern str pkg))
                             ((and (eq (car chars) #\{) (eq (second chars) #\}))
-                             (intern str))
+                             (intern str pkg))
                             ((and (eq (car chars) #\<) (eq (second chars) #\>))
-                             (intern str))
+                             (intern str pkg))
                             (t wff)))))
             ((atom wff) wff)
             (t (cons (unhide-ttt-ops (car wff)) (unhide-ttt-ops (cdr wff)))))
