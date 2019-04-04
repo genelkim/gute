@@ -14,8 +14,11 @@
 ;``````````````````````````````
 ; Make a single atom out of the list of atoms
 ; e.g., (fuse-into-atom '(this - and - that)) --> THIS-AND-THAT
- (intern (apply #'concatenate 'string (mapcar #'string atm-list))
-         pkg))
+  ;; TODO: make this more robust to catch any locked package, not just COMMON-LISP.
+  (if (eq pkg (find-package "COMMON-LISP"))
+    (intern (apply #'concatenate 'string (mapcar #'string atm-list)))
+    (intern (apply #'concatenate 'string (mapcar #'string atm-list))
+            pkg)))
 
 ;; A parameter for default output/calling package for the interning macros.
 (defparameter *intern-caller-pkg* nil)
