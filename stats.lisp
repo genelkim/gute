@@ -5,6 +5,7 @@
 ;;   List of <boolean>
 ;; Returns the precision (<number true>/<total number>).
 (defun precision (data &key (make-float t))
+  (declare (type list data))
   (let ((rat
           (/ (length (remove-if-not #'(lambda (x) x) data)) (length data))))
     (if make-float (float rat) rat)))

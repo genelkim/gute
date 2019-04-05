@@ -15,6 +15,7 @@
 ; the hidden symbols in a formula.
 ;
   (let (str chars pkg)
+       (declare (type list chars))
        (cond ((symbolp wff)
               (setf pkg (symbol-package wff))
               (setq str (string wff))
@@ -37,6 +38,7 @@
 ; in wff by 'hide-ttt-ops':
 ;
  (let (str chars pkg)
+      (declare (type list chars))
       (cond ((symbolp wff)
              (setf pkg (symbol-package wff))
              (setq str (string wff))

@@ -5239,7 +5239,8 @@
 
 
 (defun present-singular (word)
-  (if (and (symbolp word) (member '#\_ (coerce (string word) 'list)))
+  (if (and (symbolp word)
+           (member '#\_ (coerce (string (the symbol word)) 'list)))
       (let ((words (re:split "_" (string word))))
         (symb (format nil "~{~A~^_~}"
                       (cons (present-singular (intern (car words)))

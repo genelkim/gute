@@ -4,9 +4,13 @@
 ;; Returns a slice of the list with given starting and ending indices,
 ;; inclusive and exclusive, respectively.
 (defun slice (lst start end)
+  (declare (type fixnum start end)
+           (type list lst))
   (labels
     ((helper
        (cur index acc)
+       (declare (type fixnum index)
+                (type list cur acc))
        (cond
          ;; Ran out of list.
          ((null cur) acc)
@@ -15,17 +19,20 @@
          ;; Recursive case, in range.
          ((and (>= index start)
                (< index end))
-          (helper (cdr cur) (+ index 1) (cons (car cur) acc)))
+          (helper (cdr cur) (1+ index) (cons (car cur) acc)))
          ;; Recursive case before start.
-         (t (helper (cdr cur) (+ index 1) acc)))))
+         (t (helper (cdr cur) (1+ index) acc)))))
     (reverse (helper lst 0 '()))))
 
 ;; Returns a list without the nth element.
 (defun remove-nth (n lst)
+  (declare (type fixnum n)
+           (type list lst))
   (append (subseq lst 0 n) (nthcdr (1+ n) lst)))
 
 ;; Returns a list of lst with cndn filter out followed by lst with only cndn.
 (defun split-by-cond (lst cndn)
+  (declare (type list lst))
   (list (remove-if cndn lst)
         (remove-if-not cndn lst)))
 

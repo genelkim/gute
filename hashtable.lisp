@@ -7,6 +7,7 @@
 (defun print-hash-table-readably (hash-table
                                   &optional (stream *standard-output*))
   "Prints a hash table readably using ALEXANDRIA:ALIST-HASH-TABLE."
+  (declare (type stream stream))
   (let ((test (hash-table-test hash-table))
         (*print-circle* t)
         (*print-readably* t))
@@ -20,13 +21,15 @@
 ;; the original.
 (defun print-ht (ht &key (stream *standard-output*) (cutoff 10) (itemsep "~%"))
   "Prints a hash table readably to look like Python hash tables."
+  (declare (type stream stream))
   (let ((test (hash-table-test ht))
         (*print-circle* t)
         (*print-readably* t)
         (alist (alexandria:hash-table-alist ht))
         overmax
         printlist)
-    (setq overmax (> (length alist) cutoff))
+    (declare (type list alist))
+    (setq overmax (> (the fixnum (length alist)) cutoff))
     (setq printlist (if overmax (subseq alist 0 cutoff) alist))
     (format stream "HASH-TABLE(TEST #'~A)~%{" test)
     (if (not (null alist))
