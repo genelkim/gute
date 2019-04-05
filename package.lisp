@@ -3,7 +3,8 @@
 
 (in-package :cl-user)
 
-(defpackage :util
+(defpackage :cl-util
+  (:nicknames :util)
   (:use :cl :cl-user)
   (:shadowing-import-from :alexandria)
   (:shadowing-import-from :cl-ppcre)
