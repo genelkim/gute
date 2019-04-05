@@ -17,7 +17,7 @@
 ;; TODO: make this more robust to catch any locked package, not just COMMON-LISP.
   (intern (apply #'concatenate 'string
                  (mapcar #'(lambda (x)
-                             (declare (type symbol x))
+                             (declare (type (or character symbol) x))
                              (string x))
                          atm-list))
           (if (eq pkg (find-package "COMMON-LISP"))
