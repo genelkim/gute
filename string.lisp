@@ -46,6 +46,14 @@
     (format nil "~s" sym)
     (format nil "~s" (intern-symbols-recursive sym *package*))))
 
+;; Converts an atom to the corresponding string (a generalization of sym2str).
+(defun atom2str (atm &key (preserve-package nil))
+  (declare (type atom atm)
+           (type t preserve-package))
+  (if preserve-package
+    (format nil "~s" atm)
+    (format nil "~s" (intern-symbols-recursive atm *package*))))
+
 ;; Converts a list to a string with a given delimiter between elements.
 ;; Elements are represented with the usual string representation.
 (defun list-to-string (lst delim &optional (remove-newlines nil))

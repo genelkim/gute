@@ -42,6 +42,7 @@
     :left-trim
     :right-trim
     :sym2str
+    :atom2str
     :list-to-string
     :levenshtein
 

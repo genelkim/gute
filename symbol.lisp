@@ -21,8 +21,8 @@
                              (string x))
                          atm-list))
           (if (eq pkg (find-package "COMMON-LISP"))
-            pkg
-            *package*)))
+            *package*
+            pkg)))
 
 ;; A parameter for default output/calling package for the interning macros.
 (defparameter *intern-caller-pkg* nil)
