@@ -13,11 +13,11 @@
                (:file "ttt")
                (:file "symbol")
                (:file "lore-util")
+               (:file "regex")
                (:file "lang")
                (:file "reachability-indexing")
                (:file "hashtable")
                (:file "function")
                (:file "stats")
-               (:file "memo")
-               (:file "regex")))
+               (:file "memo")))
 
