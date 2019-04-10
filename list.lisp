@@ -36,3 +36,27 @@
   (list (remove-if cndn lst)
         (remove-if-not cndn lst)))
 
+;; Returns a list where the items alternate between the items of lst1 and lst2.
+(defun interleave (lst1 lst2)
+  (labels
+    ;; Helper function, builds the interleaving in reverse.
+    ;; Reduces the number of base and recursive cases by swapping l1 and l2
+    ;; between recursive calls.
+    ((helper (l1 l2 acc)
+       (cond
+         ((null l1) (append (reverse l2) acc))
+         (t (helper l2 (cdr l1) (cons (car l1) acc))))))
+    (reverse (helper lst1 lst2 nil))))
+
+;; (a b c d) -> ((a b) (c d))
+;; Assumes that the list is of even length and doesn't contain nil elements.
+(defun pair-up-list (lst)
+  (reverse (car (reduce
+                  #'(lambda (acc cur)
+                      (if (cdr acc)
+                        (cons (cons (list (cdr acc) cur) (car acc))
+                              nil)
+                        (cons (car acc) cur)))
+                  lst
+                  :initial-value '(nil . nil)))))
+

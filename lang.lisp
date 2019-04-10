@@ -1,7 +1,10 @@
-;; Textual/Linguistic utility functions from Lore.  The defpackage was
-;; refactored and some comments have been added by Gene (2018-11-15).
+;; Textual/Linguistic utility functions.
 ;;
-;; ```Original Header Comment```
+;; Most of this file was taken from the Lore project. The defpackage was
+;; refactored and some comments have been added by Gene (2018-11-15). Some new
+;; functions have been added since.
+;;
+;; ```Original Lore Header Comment```
 ;; Textual/Linguistic Utility Functions
 ;; Jonathan Gordon, Benjamin Van Durme, Phil Michalak, Fabrizio Morbini
 ;;   The functions for the plural and singular processing are derived
@@ -10,7 +13,6 @@
 (in-package :util)
 
 ;; Give cl-ppcre a nickname.
-;;(defpackage cl-ppcre (:nicknames re))
 (add-nickname "CL-PPCRE" "RE")
 
 ;; Words with a silent initial 'h': use 'an'.
@@ -5287,4 +5289,282 @@
 (defun remove-punctuation (string)
   "Replace punctuation with spaces in string."
   (substitute-if #\space #'punctuation-p string))
+
+;; List of contractions is from
+;; https://github.com/ian-beaver/pycontractions/blob/master/pycontractions/contractions.py
+(defvar *contraction-regex-alist*
+  '(("\\bare\\s\+not\\b" . "aren't")
+    ("\\bcannot\\b" . "can't")
+    ("\\bcould\\s\+have\\b" . "could've")
+    ("\\bcould\\s\+not\\b" . "couldn't")
+    ("\\bdid\\s\+not\\b" . "didn't")
+    ("\\bdoes\\s\+not\\b" . "doesn't")
+    ("\\bdo\\s\+not\\b" . "don't")
+    ("\\bgot\\s\+to\\b" . "gotta")
+    ("\\bhad\\s\+not\\b" . "hadn't")
+    ("\\bhas\\s\+not\\b" . "hasn't")
+    ("\\bhave\\s\+not\\b" . "haven't")
+    ("\\bhe\\s\+had\\b" . "he'd")
+    ("\\bhe\\s\+would\\b" . "he'd")
+    ("\\bhe\\s\+shall\\b" . "he'll")
+    ("\\bhe\\s\+will\\b" . "he'll")
+    ("\\bhe\\s\+has\\b" . "he's")
+    ("\\bhe\\s\+is\\b" . "he's")
+    ("\\bhow\\s\+did\\b" . "how'd")
+    ("\\bhow\\s\+would\\b" . "how'd")
+    ("\\bhow\\s\+will\\b" . "how'll")
+    ("\\bhow\\s\+has\\b" . "how's")
+    ("\\bhow\\s\+is\\b" . "how's")
+    ("\\bhow\\s\+does\\b" . "how's")
+    ("\\bI\\s\+had\\b" . "I'd")
+    ("\\bI\\s\+would\\b" . "I'd")
+    ("\\bI\\s\+shall\\b" . "I'll")
+    ("\\bI\\s\+will\\b" . "I'll")
+    ("\\bI\\s\+am\\b" . "I'm")
+    ("\\bI\\s\+have\\b" . "I've")
+    ("\\bis\\s\+not\\b" . "isn't")
+    ("\\bit\\s\+would\\b" . "it'd")
+    ("\\bit\\s\+shall\\b" . "it'll")
+    ("\\bit\\s\+will\\b" . "it'll")
+    ("\\bit\\s\+has\\b" . "it's")
+    ("\\bit\\s\+is\\b" . "it's")
+    ("\\bmay\\s\+have\\b" . "may've")
+    ("\\bmight\\s\+not\\b" . "mightn't")
+    ("\\bmight\\s\+have\\b" . "might've")
+    ("\\bmust\\s\+not\\b" . "mustn't")
+    ("\\bmust\\s\+have\\b" . "must've")
+    ("\\bneed\\s\+not\\b" . "needn't")
+    ("\\bof\\s\+the\\s\+clock\\b" . "o'clock")
+    ("\\bought\\s\+not\\b" . "oughtn't")
+    ("\\bshall\\s\+not\\b" . "shan't")
+    ("\\bshe\\s\+had\\b" . "she'd")
+    ("\\bshe\\s\+would\\b" . "she'd")
+    ("\\bshe\\s\+shall\\b" . "she'll")
+    ("\\bshe\\s\+will\\b" . "she'll")
+    ("\\bshe\\s\+has\\b" . "she's")
+    ("\\bshe\\s\+is\\b" . "she's")
+    ("\\bshould\\s\+have\\b" . "should've")
+    ("\\bshould\\s\+not\\b" . "shouldn't")
+    ("\\bsomebody\\s\+has\\b" . "somebody's")
+    ("\\bsomebody\\s\+is\\b" . "somebody's")
+    ("\\bsomeone\\s\+has\\b" . "someone's")
+    ("\\bsomeone\\s\+is\\b" . "someone's")
+    ("\\bsomething\\s\+has\\b" . "something's")
+    ("\\bsomething\\s\+is\\b" . "something's")
+    ("\\bthat\\s\+shall\\b" . "that'll")
+    ("\\bthat\\s\+will\\b" . "that'll")
+    ("\\bthat\\s\+are\\b" . "that're")
+    ("\\bthat\\s\+has\\b" . "that's")
+    ("\\bthat\\s\+is\\b" . "that's")
+    ("\\bthat\\s\+would\\b" . "that'd")
+    ("\\bthat\\s\+had\\b" . "that'd")
+    ("\\bthere\\s\+had\\b" . "there'd")
+    ("\\bthere\\s\+would\\b" . "there'd")
+    ("\\bthere\\s\+are\\b" . "there're")
+    ("\\bthere\\s\+has\\b" . "there's")
+    ("\\bthere\\s\+is\\b" . "there's")
+    ("\\bthese\\s\+are\\b" . "these're")
+    ("\\bthey\\s\+had\\b" . "they'd")
+    ("\\bthey\\s\+would\\b" . "they'd")
+    ("\\bthey\\s\+shall\\b" . "they'll")
+    ("\\bthey\\s\+will\\b" . "they'll")
+    ("\\bthey\\s\+are\\b" . "they're")
+    ("\\bthey\\s\+have\\b" . "they've")
+    ("\\bthis\\s\+has\\b" . "this's")
+    ("\\bthis\\s\+is\\b" . "this's")
+    ("\\bthose\\s\+are\\b" . "those're")
+    ("\\bwas\\s\+not\\b" . "wasn't")
+    ("\\bwe\\s\+had\\b" . "we'd")
+    ("\\bwe\\s\+would\\b" . "we'd")
+    ("\\bwe\\s\+would\\s\+have\\b" . "we'd've")
+    ("\\bwe\\s\+will\\b" . "we'll")
+    ("\\bwe\\s\+are\\b" . "we're")
+    ("\\bwe\\s\+have\\b" . "we've")
+    ("\\bwere\\s\+not\\b" . "weren't")
+    ("\\bwhat\\s\+did\\b" . "what'd")
+    ("\\bwhat\\s\+shall\\b" . "what'll")
+    ("\\bwhat\\s\+will\\b" . "what'll")
+    ("\\bwhat\\s\+are\\b" . "what're")
+    ("\\bwhat\\s\+has\\b" . "what's")
+    ("\\bwhat\\s\+is\\b" . "what's")
+    ("\\bwhat\\s\+does\\b" . "what's")
+    ("\\bwhat\\s\+have\\b" . "what've")
+    ("\\bwhen\\s\+has\\b" . "when's")
+    ("\\bwhen\\s\+is\\b" . "when's")
+    ("\\bwhere\\s\+did\\b" . "where'd")
+    ("\\bwhere\\s\+are\\b" . "where're")
+    ("\\bwhere\\s\+has\\b" . "where's")
+    ("\\bwhere\\s\+is\\b" . "where's")
+    ("\\bwhere\\s\+does\\b" . "where's")
+    ("\\bwhere\\s\+have\\b" . "where've")
+    ("\\bwhich\\s\+has\\b" . "which's")
+    ("\\bwhich\\s\+is\\b" . "which's")
+    ("\\bwho\\s\+would\\b" . "who'd")
+    ("\\bwho\\s\+had\\b" . "who'd")
+    ("\\bwho\\s\+did\\b" . "who'd")
+    ("\\bwho\\s\+would\\s\+have\\b" . "who'd've")
+    ("\\bwho\\s\+shall\\b" . "who'll")
+    ("\\bwho\\s\+will\\b" . "who'll")
+    ("\\bwho\\s\+are\\b" . "who're")
+    ("\\bwho\\s\+has\\b" . "who's")
+    ("\\bwho\\s\+is\\b" . "who's")
+    ("\\bwho\\s\+does\\b" . "who's")
+    ("\\bwho\\s\+have\\b" . "who've")
+    ("\\bwhy\\s\+did\\b" . "why'd")
+    ("\\bwhy\\s\+are\\b" . "why're")
+    ("\\bwhy\\s\+has\\b" . "why's")
+    ("\\bwhy\\s\+is\\b" . "why's")
+    ("\\bwhy\\s\+does\\b" . "why's")
+    ("\\bwill\\s\+not\\b" . "won't")
+    ("\\bwould\\s\+have\\b" . "would've")
+    ("\\bwould\\s\+not\\b" . "wouldn't")
+    ("\\byou\\s\+had\\b" . "you'd")
+    ("\\byou\\s\+would\\b" . "you'd")
+    ("\\byou\\s\+shall\\b" . "you'll")
+    ("\\byou\\s\+will\\b" . "you'll")
+    ("\\byou\\s\+are\\b" . "you're")
+    ("\\byou\\s\+have\\b" . "you've")))
+
+
+(defvar *contraction-regex-scanner-alist*
+  (regex-alist-to-scanner-alist
+    *contraction-regex-alist* :case-insensitive-mode t))
+
+
+;; Applies all common contractions to the given string, left-to-right.
+;; e.g.
+;;  "I cannot wait, you will not stop me" -> "I can't wait, so you won't stop me"
+(defun add-contractions (str &key (custom-mappings nil))
+  (reduce #'(lambda (acc cur)
+              (let ((regex (car cur))
+                    (result (cdr cur)))
+                (re:regex-replace-all regex acc result)))
+          (append (regex-alist-to-scanner-alist
+                    custom-mappings :case-insensitive-mode t)
+                  *contraction-regex-scanner-alist*)
+          :initial-value str))
+
+
+;; Generates a list of possible rewritings of the given sentence by adding
+;; contractions. It assumes that possible contraction points don't overlap.
+;; If there are overlaps, the portion that matches earlier in the string
+;; is used.
+;;
+;; Custom contraction choices can be supplied via `custom-mappings` as an
+;; alist mapping regular expressions to the contracted form.
+;;
+;; e.g.
+;; "I cannot run, but I will not give up"
+;; -> ("I cannot run, but I will not give up"
+;;     "I can't run, but I will not give up"
+;;     "I cannot run, but I'll not give up"
+;;     "I can't run, but I'll not give up")
+(defun contraction-possibilities-eager (str &key (custom-mappings nil))
+  (let*
+    ((all-mappings (append custom-mappings *contraction-regex-alist*))
+     (all-matcher (cl-strings:join (mapcar #'car all-mappings) :separator "\|"))
+     (unmatched (re:split all-matcher str))
+     (matches (re:all-matches-as-strings all-matcher str))
+     (contracted (mapcar #'(lambda (match)
+                             (add-contractions match :custom-mappings custom-mappings))
+                         matches))
+     (paired (mapcar #'list matches contracted))
+     (possibilities (cartesian-product paired)))
+    (mapcar #'(lambda (fillers)
+                (cl-strings:join (interleave unmatched fillers)))
+      possibilities)))
+
+
+;; Generates a list of possible rewritings of the given sentence by adding
+;; contractions. If possible contraction points overlap, then possibilities
+;; will be handled for each of these choices.
+;;
+;; Custom contraction choices can be supplied via `custom-mappings` as an
+;; alist mapping regular expressions to the contracted form.
+;;
+;; e.g.
+;; "I cannot run, but I will not give up"
+;; -> ("I cannot run, but I will not give up" "I can't run, but I will not give up"
+;;     "I cannot run, but I'll not give up" "I can't run, but I'll not give up"
+;;     "I cannot run, but I won't give up" "I can't run, but I won't give up")
+(defun contraction-possibilities-overlap (str &key (custom-mappings nil))
+  (labels
+    ;; Recursive helper function.
+    ;; Generates an exhaustive list include-exclude combinations of the given
+    ;; spans with no span overlap. Both inputs and outputs are sorted by span
+    ;; starts.
+    ;; e.g.
+    ;;  ((2 8) (18 24) (20 28))
+    ;;  -> (() ((2 8)) ((18 24)) ((20 28))
+    ;;      ((2 8) (18 24)) ((2 8) (20 28)))
+    ((in-out-combos (spans start acc)
+       (cond
+         ;; Reached the end.
+         ((null spans) (list (reverse acc)))
+         ;; We identified a span overlap so ignore current span.
+         ((< (caar spans) start) (in-out-combos (cdr spans) start acc))
+         ;; Recurse into both including and excluding the current span.
+         (t (append
+              ;; include
+              (in-out-combos (cdr spans) (cadar spans) (cons (car spans) acc))
+              ;; exclude
+              (in-out-combos (cdr spans) start acc)))))
+     ;; (2 8 18 24) ("can't" "I'll") "I cannot run, but I will not give up"
+     ;; -> "I can't run, but I'll not give up"
+     (apply-span-mappings (flat-spans map-strs cleanstr)
+       (let* ((raw-spans (pair-up-list (append '(0) flat-spans (list (length cleanstr)))))
+              (untouched-spans (mapcar
+                                 #'(lambda (x) (subseq cleanstr (first x) (second x)))
+                                 raw-spans)))
+         (cl-strings:join (interleave untouched-spans map-strs))))
+       ) ; end of labels definitions
+    ;; Main body.
+    (let*
+      ((all-mappings (append custom-mappings *contraction-regex-alist*))
+       (all-matcher (cl-strings:join (mapcar #'car all-mappings) :separator "\|"))
+       (match-spans (pair-up-list (overlap-regex-matches all-matcher str)))
+       (match-strs (overlap-regex-matches-as-strings all-matcher str))
+       (match-maps (mapcar #'(lambda (match-str)
+                               (add-contractions match-str :custom-mappings custom-mappings))
+                           match-strs))
+       (match-info (mapcar #'append match-spans (mapcar #'list match-strs match-maps)))
+       (possible-spans (in-out-combos match-info 0 nil)))
+      (mapcar
+        #'(lambda (span-info-lst)
+            (let ((flat-spans (interleave (mapcar #'first span-info-lst)
+                                          (mapcar #'second span-info-lst)))
+                  (map-strs (mapcar #'fourth span-info-lst)))
+              (apply-span-mappings flat-spans map-strs str)))
+        possible-spans))))
+
+;; TODO: we could make the function below more efficient by turning it into a regex and doing
+;; a single comparison..
+;; == example above ==
+;; "I cannot run, but I will not give up"
+;; -> ("I cannot run, but I will not give up"
+;;     "I can't run, but I will not give up"
+;;     "I cannot run, but I won't give up"
+;;     "I can't run, but I won't give up")
+;;
+;; == becomes ==
+;; "I cannot run, but I will not give up"
+;; -> "I (cannot|can't) run, but I (will not|won't) give up"
+;;
+;; == a bit more complicated for regex... ==
+;;  might consider using the Aho-Corasick algorithm, available http://clstringmatch.sourceforge.net/
+;;
+
+;; Generates a list of possible rewritings of the given sentence by adding
+;; contractions. If possible contraction points overlap, then possibilities
+;; will be handled for each of these choices.
+;;
+;; Custom contraction choices can be supplied via `custom-mappings` as an
+;; alist mapping regular expressions to the contracted form.
+;;
+;; If `overlap` is nil, the we assume no overlap in contractions possibilies,
+;; which allows a more efficient version of the function.
+(defun contraction-possibilities (str &key (custom-mappings nil) (overlap t))
+  (if overlap
+    (contraction-possibilities-overlap str :custom-mappings custom-mappings)
+    (contraction-possibilities-eager str :custom-mappings custom-mappings)))
 

@@ -9,6 +9,7 @@
   (:shadowing-import-from :alexandria)
   (:shadowing-import-from :cl-ppcre)
   (:shadowing-import-from :cl-mathstats)
+  (:shadowing-import-from :cl-strings)
   (:export
     ;; general.lisp
     :define-constant
@@ -36,6 +37,8 @@
     :slice
     :remove-nth
     :split-by-cond
+    :interleave
+    :pair-up-list
 
     ;; string.lisp
     :trim
@@ -99,6 +102,8 @@
     :capitalize-words
     :punctuation-p
     :remove-punctuation
+    :add-contractions
+    :contraction-possibilities
 
     ;; reachability-indexing.lisp
     :reachable
@@ -116,11 +121,17 @@
     :group-precisions
     :macro-precision
     :micro-precision
+    :cartesian-product
 
     ;; memo.lisp
     :memoize
     :memo
     :clear-memoize
     :defun-memo
+
+    ;; regex.lisp
+    :overlap-regex-matches
+    :overlap-regex-matches-as-strings
+    :regex-alist-to-scanner-alist
     ))
 

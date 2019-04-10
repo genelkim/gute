@@ -43,5 +43,20 @@
 ;;   List of (category . <boolean>)
 ;; Returns the micro precision -- average precision over the categories.
 (defun micro-precision (data)
-  (cl-mathstats:mean (mapcar #'cdr (group-precisions data))))
+  (cl-mathmean (mapcar #'cdr (group-precisions data))))
+
+;; Cartesian product of n lists.
+;;  ((a b) (1 2) (x y))
+;;  -> ((a 1 x) (a 1 y) (a 2 x) (a 2 y) (b 1 x) (b 1 y) (b 2 x) (b 2 y))
+(defun cartesian-product (choicelst)
+  (reduce
+    #'(lambda (acc choices)
+        (apply #'append
+          (mapcar
+            #'(lambda (choice)
+                (mapcar #'(lambda (prev) (cons choice prev))
+                        acc))
+            choices)))
+    (reverse choicelst)
+    :initial-value '(nil)))
 

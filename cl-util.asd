@@ -3,7 +3,7 @@
 
 (asdf:defsystem :cl-util
   :depends-on (:alexandria (:version #:cl-ppcre "2.0.4")
-               :cl-mathstats)
+               :cl-mathstats :cl-strings)
   :components ((:file "package")
                (:file "general")
                (:file "list")
@@ -18,5 +18,6 @@
                (:file "hashtable")
                (:file "function")
                (:file "stats")
-               (:file "memo")))
+               (:file "memo")
+               (:file "regex")))
 
