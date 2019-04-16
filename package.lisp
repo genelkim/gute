@@ -22,6 +22,8 @@
     :sbcl
     :acl
     :cmucl
+    :safe-symbol-eval
+    :argv
 
     ;; io.lisp
     :read-file-lines

@@ -47,3 +47,19 @@
 (defun cmucl-impl? ()
   (eql (lisp-impl) 'cmucl))
 
+;; Evaluates a symbol with respect to the given package iff the package is
+;; available and the symbol is found in that package.
+(defun safe-symbol-eval (sym pkg-name)
+  (let ((pkg (find-package pkg-name)))
+    (if pkg (eval (find-symbol (symbol-name sym) pkg)))))
+
+;; Gives the argv depending on the distribution.
+(defun argv ()
+  (or 
+    #+SBCL sb-ext:*posix-argv*
+    #+LISPWORKS system:*line-arguments-list*
+    #+CMU extensions:*command-line-words*
+    #+ALLEGRO (sys:command-line-arguments)
+    #+CLISP *args*
+    nil))
+

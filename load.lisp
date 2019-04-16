@@ -46,7 +46,6 @@
 ;; whether you want the files compiled into FASLs or not:
 (asdf:operate 'asdf:load-op 'cl-util) ;; Compile and load as necessary
 ;(asdf:operate 'asdf:load-source-op 'ttt) ;; Doesn't compile
-  
 ))
 
 
