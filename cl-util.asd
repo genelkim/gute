@@ -19,5 +19,6 @@
                (:file "hashtable")
                (:file "function")
                (:file "stats")
-               (:file "memo")))
+               (:file "memo")
+               (:file "queue")))
 

@@ -135,5 +135,12 @@
     :overlap-regex-matches
     :overlap-regex-matches-as-strings
     :regex-alist-to-scanner-alist
+
+    ;; queue.lisp
+    :queue
+    :make-queue
+    :queue-empty-p
+    :enqueue
+    :dequeue
     ))
 
