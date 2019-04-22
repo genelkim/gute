@@ -1,6 +1,16 @@
 
 (in-package :util)
 
+
+;; Inserts x to a list lst at position i.
+;; Destructive.
+(defun insert (x lst i)
+  (if (= i 0)
+    (push x lst)
+    (push x (cdr (nthcdr (1- i) lst))))
+  lst)
+
+
 ;; Returns a slice of the list with given starting and ending indices,
 ;; inclusive and exclusive, respectively.
 (defun slice (lst start end)
@@ -59,4 +69,19 @@
                         (cons (car acc) cur)))
                   lst
                   :initial-value '(nil . nil)))))
+
+;; From https://rosettacode.org/wiki/Power_set#Common_Lisp
+(defun powerset (s)
+  (if s (mapcan (lambda (x) (list (cons (car s) x) x))
+                (powerset (cdr s)))
+      '(())))
+
+;; From https://rosettacode.org/wiki/Permutations#Common_Lisp
+(defun permute (list)
+  (if list
+    (mapcan #'(lambda (x)
+		(mapcar #'(lambda (y) (cons x y))
+			(permute (remove x list))))
+	    list)
+    '(()))) ; else
 

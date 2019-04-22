@@ -1,4 +1,7 @@
-;; From https://rosettacode.org/wiki/Queue/Definition#Common_Lisp
+
+(in-package :cl-util)
+
+;; Largely based on https://rosettacode.org/wiki/Queue/Definition#Common_Lisp
 (defstruct (queue (:constructor %make-queue))
   (items '() :type list)
   (tail '() :type list))
@@ -25,3 +28,10 @@
   (if (queue-empty-p queue)
     (error "Cannot dequeue from empty queue.")
     (pop (queue-items queue))))
+
+(defun queue-peek (queue)
+  "Peeks into the first item of the queue."
+  (if (queue-empty-p queue)
+    (error "Cannot peek into an empty queue.")
+    (car (queue-items queue))))
+

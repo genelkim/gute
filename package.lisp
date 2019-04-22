@@ -9,7 +9,6 @@
   (:shadowing-import-from :alexandria)
   (:shadowing-import-from :cl-ppcre)
   (:shadowing-import-from :cl-mathstats)
-  (:shadowing-import-from :cl-strings)
   (:export
     ;; general.lisp
     :define-constant
@@ -36,11 +35,14 @@
     :princln
 
     ;; list.lisp
+    :insert
     :slice
     :remove-nth
     :split-by-cond
     :interleave
     :pair-up-list
+    :powerset
+    :permute
 
     ;; string.lisp
     :trim
@@ -59,6 +61,8 @@
     ;; ttt.lisp
     :hide-ttt-ops
     :unhide-ttt-ops
+    :ttt-all-rule-results
+    :ttt-apply-rule-possibilities
 
     ;; symbol.lisp
     :split-into-atoms
@@ -116,7 +120,14 @@
     :print-ht
 
     ;; function.lisp
+    :nilfn
+    :tfn
     :compose
+    :grouped-arglist
+    :argnum
+    :required-argnum
+    :key-argnum
+    :optional-argnum
 
     ;; stats.lisp
     :precision
@@ -142,5 +153,6 @@
     :queue-empty-p
     :enqueue
     :dequeue
+    :queue-peek
     ))
 
