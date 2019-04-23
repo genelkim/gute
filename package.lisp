@@ -43,6 +43,7 @@
     :pair-up-list
     :powerset
     :permute
+    :label-with-num
 
     ;; string.lisp
     :trim

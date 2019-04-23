@@ -85,3 +85,13 @@
 	    list)
     '(()))) ; else
 
+;; Label list with numbers.
+(defun label-with-num (lst)
+  (labels
+    ((helper (acc cur)
+       (let ((lst+ (first acc))
+             (curidx (second acc)))
+         (list (cons (list curidx cur) lst+) (1+ curidx)))))
+    ;; strip off the counter and reverse.
+    (reverse (first (reduce #'helper lst :initial-value (list nil 0))))))
+
