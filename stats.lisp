@@ -6,9 +6,16 @@
 ;; Returns the precision (<number true>/<total number>).
 (defun precision (data &key (make-float t))
   (declare (type list data))
-  (let ((rat
-          (/ (length (remove-if-not #'(lambda (x) x) data)) (length data))))
-    (if make-float (float rat) rat)))
+  (let* ((num (length (remove-if-not #'(lambda (x) x) data)))
+         (den (length data))
+         (rat
+          (if (= 0 den) nil
+            (/ num den))))
+    (values
+      (if (and make-float rat) (float rat) rat)
+      rat
+      num
+      den)))
 
 
 ;; Input data format:
@@ -30,7 +37,7 @@
                       data :initial-value nil))
     (mapcar #'(lambda (x)
                 (cons (car x)
-                      (precision (cdr x))))
+                      (multiple-value-list (precision (cdr x)))))
             grouped)))
 
 ;; Input data format:
@@ -43,7 +50,7 @@
 ;;   List of (category . <boolean>)
 ;; Returns the micro precision -- average precision over the categories.
 (defun micro-precision (data)
-  (cl-mathmean (mapcar #'cdr (group-precisions data))))
+  (cl-mathmean (mapcar #'second (group-precisions data))))
 
 ;; Cartesian product of n lists.
 ;;  ((a b) (1 2) (x y))

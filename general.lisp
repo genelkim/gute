@@ -19,10 +19,16 @@
 ;; Safe intern.
 ;;  x can be a string or a symbol and it interns it.
 (defun safe-intern (strsym &optional pkg)
+  (if (eq pkg (find-package "COMMON-LISP"))
+    (setf pkg *package*))
   (cond
     ((stringp strsym) (intern strsym pkg))
     ((symbolp strsym) (intern (symbol-name strsym) pkg))
-    (t (error "The input to safe-intern is not a supported data type."))))
+    ((numberp strsym) strsym)
+    (t (error
+         (format nil
+                 "The input to safe-intern is not a supported data type.~%Value: ~s~%Type: ~s~%"
+                 strsym (type-of strsym))))))
 
 ;;
 ;; Functions for determining lisp implementation.
@@ -55,7 +61,7 @@
 
 ;; Gives the argv depending on the distribution.
 (defun argv ()
-  (or 
+  (or
     #+SBCL sb-ext:*posix-argv*
     #+LISPWORKS system:*line-arguments-list*
     #+CMU extensions:*command-line-words*
