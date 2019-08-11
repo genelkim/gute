@@ -2,18 +2,17 @@
 (in-package :util)
 
 
-;; Inserts x to a list lst at position i.
-;; Destructive.
 (defun insert (x lst i)
+  "Inserts X to LST at position I.
+  Destructive."
   (if (= i 0)
     (push x lst)
     (push x (cdr (nthcdr (1- i) lst))))
   lst)
 
-
-;; Returns a slice of the list with given starting and ending indices,
-;; inclusive and exclusive, respectively.
 (defun slice (lst start end)
+  "Returns a slice of :ST with given indices.
+  START and END are inclusive and exclusive, respectively."
   (declare (type fixnum start end)
            (type list lst))
   (labels
@@ -34,20 +33,20 @@
          (t (helper (cdr cur) (1+ index) acc)))))
     (reverse (helper lst 0 '()))))
 
-;; Returns a list without the nth element.
 (defun remove-nth (n lst)
+  "Returns LST without the N-th element."
   (declare (type fixnum n)
            (type list lst))
   (append (subseq lst 0 n) (nthcdr (1+ n) lst)))
 
-;; Returns a list of lst with cndn filter out followed by lst with only cndn.
 (defun split-by-cond (lst cndn)
+  "Returns LST with CNDN filtered out followed by LST with only CNDN."
   (declare (type list lst))
   (list (remove-if cndn lst)
         (remove-if-not cndn lst)))
 
-;; Returns a list where the items alternate between the items of lst1 and lst2.
 (defun interleave (lst1 lst2)
+  "Returns a list where the items alternate between the items of LST1 and LST2."
   (labels
     ;; Helper function, builds the interleaving in reverse.
     ;; Reduces the number of base and recursive cases by swapping l1 and l2
@@ -58,35 +57,48 @@
          (t (helper l2 (cdr l1) (cons (car l1) acc))))))
     (reverse (helper lst1 lst2 nil))))
 
-;; (a b c d) -> ((a b) (c d))
-;; Assumes that the list is of even length and doesn't contain nil elements.
 (defun pair-up-list (lst)
-  (reverse (car (reduce
-                  #'(lambda (acc cur)
-                      (if (cdr acc)
-                        (cons (cons (list (cdr acc) cur) (car acc))
-                              nil)
-                        (cons (car acc) cur)))
-                  lst
-                  :initial-value '(nil . nil)))))
+  "Returns a list where every two consecutive items in LST are paired together.
+  i.e. (a b c d) -> ((a b) (c d))
+  Assumes that the list is of even length and doesn't contain nil elements."
+  (reverse 
+    (car 
+      ;; ACC is a pair where the first value is the accumulation of the return
+      ;; value and the second value is the first value of the next pair or NIL
+      ;; if a fresh pair.
+      (reduce #'(lambda (acc cur)
+                  (let ((acclst (first acc))
+                        (firstval (second acc)))
+                    (if firstval
+                      (list (cons (list firstval cur) acclst)
+                            nil)
+                      (list accllst cur))))
+              lst
+              :initial-value '(list nil nil)))))
 
-;; From https://rosettacode.org/wiki/Power_set#Common_Lisp
 (defun powerset (s)
-  (if s (mapcan (lambda (x) (list (cons (car s) x) x))
+  "Computes a powerset of set S.
+  From https://rosettacode.org/wiki/Power_set#Common_Lisp"
+  (if s (mapcan #'(lambda (x) (list (cons (car s) x) x))
                 (powerset (cdr s)))
       '(())))
 
-;; From https://rosettacode.org/wiki/Permutations#Common_Lisp
 (defun permute (list)
+  "Returns a list of all permutations of LIST.
+  From https://rosettacode.org/wiki/Permutations#Common_Lisp"
   (if list
+    ;; Recursive case.
     (mapcan #'(lambda (x)
-		(mapcar #'(lambda (y) (cons x y))
-			(permute (remove x list))))
-	    list)
-    '(()))) ; else
+                (mapcar #'(lambda (y) (cons x y))
+                        (permute (remove x list))))
+            list)
+    ;; Base case.
+    '(()))) 
 
-;; Label list with numbers.
 (defun label-with-num (lst)
+  "Labels LST with numbers.
+  Similar to 'enumerate' in Python.
+  (label-with-num '(a b c)) -> '((0 a) (1 b) (2 c))"
   (labels
     ((helper (acc cur)
        (let ((lst+ (first acc))
