@@ -26,19 +26,19 @@
         (*print-circle* t)
         (*print-readably* t)
         (alist (alexandria:hash-table-alist ht))
-        overmax
-        printlist)
+        (overmax nil)
+        (printlist nil))
     (declare (type list alist))
-    (setq overmax (> (the fixnum (length alist)) cutoff))
-    (setq printlist (if overmax (subseq alist 0 cutoff) alist))
+    (setf overmax (> (the fixnum (length alist)) cutoff))
+    (setf printlist (if overmax (subseq alist 0 cutoff) alist))
     (format stream "HASH-TABLE(TEST #'~A)~%{" test)
-    (if (not (null alist))
+    (unless (null alist)
       (format stream "~S: ~S" (caar printlist) (cdar printlist)))
-    (mapcar (lambda (kv) (format stream
-                                 (concatenate 'string "," itemsep "~S: ~S")
-                                 (car kv) (cdr kv)))
-            (cdr printlist))
-    (if overmax
+    (mapc (lambda (kv) (format stream
+                               (concatenate 'string "," itemsep "~S: ~S")
+                               (car kv) (cdr kv)))
+          (cdr printlist))
+    (when overmax
       (format stream (concatenate 'string "," itemsep "...")))
     (format stream "}")))
 

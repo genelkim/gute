@@ -1,51 +1,51 @@
 
 (in-package :util)
 
-;; Robust version of defconstant that is faithful to the strict ANSI
-;; definition.
 (defmacro define-constant (name value &optional doc)
+  "ANSI compliant, robust version of defconstant."
 	`(defconstant ,name (if (boundp ',name) (symbol-value ',name) ,value)
 								,@(when doc (list doc))))
 
 (defun add-nickname (package nickname)
-  (when (stringp package)
-    (setf package (find-package package)))
-  (check-type package package)
-  (check-type nickname string)
-  (rename-package package (package-name package)
-                  (adjoin nickname (package-nicknames package)
-                          :test #'string=)))
+  "Adds a package nickname."
+  (let ((pkg (if (stringp package)
+               (find-package package)
+               package)))
+    (check-type pkg package)
+    (check-type nickname string)
+    (rename-package pkg (package-name pkg)
+                    (adjoin nickname (package-nicknames pkg)
+                            :test #'string=))))
 
-;; Safe intern.
-;;  x can be a string or a symbol and it interns it.
 (defun safe-intern (strsym &optional pkg)
-  (if (eq pkg (find-package "COMMON-LISP"))
-    (setf pkg *package*))
-  (cond
-    ((stringp strsym) (intern strsym pkg))
-    ((symbolp strsym) (intern (symbol-name strsym) pkg))
-    ((numberp strsym) strsym)
-    (t (error
-         (format nil
-                 "The input to safe-intern is not a supported data type.~%Value: ~s~%Type: ~s~%"
-                 strsym (type-of strsym))))))
+  "Safe intern.
+  strsym can be a string or a symbol and it interns it."
+  (let ((fnpkg (if (eq pkg (find-package "COMMON-LISP"))
+                 *package*
+                 pkg)))
+    (cond
+      ((stringp strsym) (intern strsym fnpkg))
+      ((symbolp strsym) (intern (symbol-name strsym) fnpkg))
+      ((numberp strsym) strsym)
+      (t (error
+           (format nil
+                   "The input to safe-intern is not a supported data type.~%Value: ~s~%Type: ~s~%"
+                   strsym (type-of strsym)))))))
 
-;;
-;; Functions for determining lisp implementation.
-;;
+;;; Functions for determining lisp implementation.
 
 (defvar *lisp-implementation-to-shorthand*
   '(("SBCL" . sbcl)
     ("International Allegro CL Free Express Edition" . acl)
     ("International Allegro CL Enterprise Edition" . acl)
     ("CMU Common Lisp" . cmucl)))
-;; Returns a symbol of the lisp implementation.
-;; This uses the implementation shorthands rather than the idiosyncratic names
-;; returned from #'cl:lisp-implementation-type
 (defun lisp-impl ()
+  "Returns a symbol of the lisp implementation. 
+  This uses the implementation shorthands rather than the idiosyncratic names
+  returned from #'CL:LISP-IMPLEMENTATION-TYPE."
   (let ((impl-str (lisp-implementation-type)))
     (cdr (assoc impl-str *lisp-implementation-to-shorthand* :test #'string=))))
-;; Functions for specific implementations.
+;;; Functions for specific implementations.
 (defun sbcl-impl? ()
   (eql (lisp-impl) 'sbcl))
 (defun acl-impl? ()
@@ -53,14 +53,17 @@
 (defun cmucl-impl? ()
   (eql (lisp-impl) 'cmucl))
 
-;; Evaluates a symbol with respect to the given package iff the package is
-;; available and the symbol is found in that package.
 (defun safe-symbol-eval (sym pkg-name)
+  "Evaluate symbol w.r.t. a package safely.
+  Evaluates a symbol with respect to the given package iff the package is
+  available and the symbol is found in that package."
   (let ((pkg (find-package pkg-name)))
-    (if pkg (eval (find-symbol (symbol-name sym) pkg)))))
+    (if pkg 
+      (eval (find-symbol (symbol-name sym) pkg))
+      nil)))
 
-;; Gives the argv depending on the distribution.
 (defun argv ()
+  "Gives the argv depending on the distribution."
   (or
     #+SBCL sb-ext:*posix-argv*
     #+LISPWORKS system:*line-arguments-list*
