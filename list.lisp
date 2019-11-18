@@ -72,9 +72,9 @@
                     (if firstval
                       (list (cons (list firstval cur) acclst)
                             nil)
-                      (list accllst cur))))
+                      (list acclst cur))))
               lst
-              :initial-value '(list nil nil)))))
+              :initial-value (list nil nil)))))
 
 (defun powerset (s)
   "Computes a powerset of set S.
