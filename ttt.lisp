@@ -5,9 +5,9 @@
 
 ;; TODO: move this into the ttt package?
 
-(defun hide-ttt-ops (wff); tested
+(defun hide-ttt-ops (wff &optional (all-pkg nil)); tested
 ;~~~~~~~~~~~~~~~~~~~~~~~~
-; Wrap [..] around symbols like !, +, ?, *, @, ~, {}, or <>, or
+; Wrap [..] around symbols like /, !, +, ?, *, @, ~, {}, or <>, or
 ; ones starting this way, which we may want to use in some patterns
 ; (e.g., in wff-patterns involving *, **, @, or ~), but can't
 ; because of their special meanings in TTT. We're assuming that
@@ -16,13 +16,18 @@
 ; shouldn't have the brackets removed when we ultimately "unhide"
 ; the hidden symbols in a formula.
 ;
+; The optional all-pkg argument allows full control of the package
+; in which the symbols are interned. Otherwise, the function defaults
+; to the home package of each symbol. Due to symbol inheritence, the
+; default functionality may not always work.
+;
   (let (str chars pkg)
        (declare (type list chars))
        (cond ((symbolp wff)
-              (setf pkg (symbol-package wff))
+              (setf pkg (if all-pkg all-pkg (symbol-package wff)))
               (setq str (string wff))
               (setq chars (coerce str 'list))
-              (cond ((member (car chars) '(#\! #\+ #\? #\* #\@ #\~))
+              (cond ((member (car chars) '(#\! #\+ #\? #\* #\@ #\~ #\/))
                      (intern (concatenate 'string "[" str "]") pkg))
                     ((and (eq (car chars) #\{) (eq (second chars) #\}))
                      (intern (concatenate 'string "[" str "]") pkg))
@@ -30,11 +35,12 @@
                      (intern (concatenate 'string "[" str "]") pkg))
                     (t wff)))
              ((atom wff) wff)
-             (t (cons (hide-ttt-ops (car wff)) (hide-ttt-ops (cdr wff)))))
+             (t (cons (hide-ttt-ops (car wff) all-pkg)
+                      (hide-ttt-ops (cdr wff) all-pkg))))
  )); end of hide-ttt-ops
 
 
-(defun unhide-ttt-ops (wff); tested
+(defun unhide-ttt-ops (wff &optional (all-pkg nil)); tested
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~
 ; Remove the square brackets that have been added around ttt symbols
 ; in wff by 'hide-ttt-ops':
@@ -42,7 +48,7 @@
  (let (str chars pkg)
       (declare (type list chars))
       (cond ((symbolp wff)
-             (setf pkg (symbol-package wff))
+             (setf pkg (if all-pkg all-pkg (symbol-package wff)))
              (setq str (string wff))
              (setq chars (coerce str 'list))
              (cond ((or (not (eq (car chars) #\[))
@@ -50,7 +56,7 @@
                    (t (setq chars (cdr (butlast chars)))
                       (setq str (coerce chars 'string))
                       (cond ((null chars) wff)
-                            ((member (car chars) '(#\! #\+ #\? #\* #\@ #\~))
+                            ((member (car chars) '(#\! #\+ #\? #\* #\@ #\~ #\/))
                              (intern str pkg))
                             ((and (eq (car chars) #\{) (eq (second chars) #\}))
                              (intern str pkg))
@@ -58,7 +64,8 @@
                              (intern str pkg))
                             (t wff)))))
             ((atom wff) wff)
-            (t (cons (unhide-ttt-ops (car wff)) (unhide-ttt-ops (cdr wff)))))
+            (t (cons (unhide-ttt-ops (car wff) all-pkg)
+                     (unhide-ttt-ops (cdr wff) all-pkg))))
  )); end of unhide-ttt-ops
 
 
