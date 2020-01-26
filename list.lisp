@@ -10,8 +10,13 @@
     (push x (cdr (nthcdr (1- i) lst))))
   lst)
 
+(defun insert-end (x lst)
+  "Inserts X to LST at the rightmost position.
+  Destructive."
+  (insert x lst (length lst)))
+
 (defun slice (lst start end)
-  "Returns a slice of :ST with given indices.
+  "Returns a slice of LST with given indices.
   START and END are inclusive and exclusive, respectively."
   (declare (type fixnum start end)
            (type list lst))
