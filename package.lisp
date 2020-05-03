@@ -155,5 +155,8 @@
     enqueue
     dequeue
     queue-peek
+
+    ;; time.lisp
+    timing
     ))
 

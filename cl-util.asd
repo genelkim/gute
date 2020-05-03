@@ -21,5 +21,6 @@
                (:file "function")
                (:file "stats")
                (:file "memo")
-               (:file "queue")))
+               (:file "queue")
+               (:file "time")))
 
