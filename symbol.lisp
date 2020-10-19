@@ -36,11 +36,12 @@
 ;; outval: immediate output of the body
 (defmacro inout-intern ((bgnval midval inpkg &key (callpkg nil)) &body body)
   `(let* ((,midval (intern-symbols-recursive ,bgnval ,inpkg))
-          (outval (progn ,@body)))
-     (cond
-       (,callpkg (intern-symbols-recursive outval ,callpkg))
-       (*intern-caller-pkg* (intern-symbols-recursive outval *intern-caller-pkg*))
-       (t outval))))
+          (outval (multiple-value-list (progn ,@body))))
+     (values-list
+       (cond
+         (,callpkg (intern-symbols-recursive outval ,callpkg))
+         (*intern-caller-pkg* (intern-symbols-recursive outval *intern-caller-pkg*))
+         (t outval)))))
 ;; Same as inout-intern macro but only performs the pre- interning portion.
 ;; Interns the incoming symbols and stores it in midval before evaluating
 ;; the body.
