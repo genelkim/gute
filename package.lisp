@@ -59,12 +59,6 @@
     tree-find
     tree-find-if
 
-    ;; ttt.lisp
-    hide-ttt-ops
-    unhide-ttt-ops
-    ttt-all-rule-results
-    ttt-apply-rule-possibilities
-
     ;; symbol.lisp
     split-into-atoms
     fuse-into-atom
