@@ -5,9 +5,9 @@
 (defpackage :gene-utilities
   (:nicknames :gute)
   (:use :cl :cl-user)
-  (:shadowing-import-from :alexandria)
-  (:shadowing-import-from :cl-ppcre)
-  (:shadowing-import-from :cl-mathstats)
+  (:import-from :cl-mathstats :mean)
+  ;(:shadowing-import-from :alexandria)
+  ;(:shadowing-import-from :cl-ppcre)
   (:export
     ;; general.lisp
     define-constant

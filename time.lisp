@@ -1,17 +1,16 @@
 
 (in-package :gute)
 
-;;; Based on Rosetta Code: https://www.rosettacode.org/wiki/Time_a_function#Common_Lisp
 ;;; Returns the original output in a list and the elapsed time of running the
 ;;; function in subsequent values.
 ;;;
 ;;; Optional parameter  `unit` can be
 ;;;   :real - for clock time
 ;;;   :base - for implementation-specific internal time
-(defun timing (function &optional (unit ':real))
+(defun timing (function &optional (unit :real))
   (let* ((time-fn (case unit
-                    (':real #'get-internal-real-time)
-                    (':base #'get-internal-base-time)
+                    (:real #'get-internal-real-time)
+                    (:base #'get-internal-run-time)
                     (otherwise (error 
                                  "Invalid parameter for `unit` in the `timing` function. It must be :real or :base. Given: ~a."
                                  unit))))

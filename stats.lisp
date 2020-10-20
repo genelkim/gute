@@ -50,7 +50,7 @@
 ;;   List of (category . <boolean>)
 ;; Returns the micro precision -- average precision over the categories.
 (defun micro-precision (data)
-  (cl-mathmean (mapcar #'second (group-precisions data))))
+  (mean (mapcar #'second (group-precisions data))))
 
 ;; Cartesian product of n lists.
 ;;  ((a b) (1 2) (x y))
