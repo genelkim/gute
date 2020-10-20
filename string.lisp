@@ -67,8 +67,6 @@
             lst)))
 
 ;; Levenshtein edit distance algorithm.
-;; From https://rosettacode.org/wiki/Levenshtein_distance#Common_Lisp
-;; I changed the inner 'defun' to 'labels' so we silence some warnings.
 (defun levenshtein (a b)
   (declare (optimize (safety 0)) ; assume no overflow
            (type simple-string a b))

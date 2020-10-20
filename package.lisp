@@ -1,5 +1,4 @@
 ;; Gene Louis Kim's Lisp Utilities.
-;; Started ~2018-11-15
 
 (in-package :cl-user)
 
