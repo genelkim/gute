@@ -6,7 +6,7 @@
 ;; Benjamin Van Durme, 2007-10-12
 ;; Jonathan Gordon, 2014-01-06
 
-(in-package :util)
+(in-package :gute)
 
 ;; Give cl-ppcre a nickname.
 ;;(defpackage cl-ppcre (:nicknames re))

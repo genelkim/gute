@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 (defun split-into-atoms (atm); tested
 ;````````````````````````````

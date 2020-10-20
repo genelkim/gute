@@ -10,7 +10,7 @@
 ;;   The functions for the plural and singular processing are derived
 ;;   from the Perl package Lingua-EN-Inflect-1.90 by Damian Conway.
 
-(in-package :util)
+(in-package :gute)
 
 ;; Give cl-ppcre a nickname.
 (add-nickname "CL-PPCRE" "RE")
@@ -47,7 +47,7 @@
 ;; replacement to the use of Knext's 'starts-with-vowel'.
 (defun indefinite-article (common-noun)
   "Returns 'a or 'an as appropriate."
-  (let* ((common-noun (tree-from-string (string common-noun) :util))
+  (let* ((common-noun (tree-from-string (string common-noun) :gute))
          (chars (coerce (string common-noun) 'list)))
     (cond ((member common-noun +consonant-exceptions+)
            'an)

@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 (defun read-file-lines (filename)
   "Reads a file line by line and return a list of strings."

@@ -1,5 +1,5 @@
 
-(in-package :cl-util)
+(in-package :gute)
 
 ;; Largely based on https://rosettacode.org/wiki/Queue/Definition#Common_Lisp
 (defstruct (queue (:constructor %make-queue))

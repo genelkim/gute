@@ -3,7 +3,7 @@
 ;;
 ;; Utility functions over general s-expressions.
 
-(in-package :util)
+(in-package :gute)
 
 ;; Recurses through the s-expression, f, and extracts out categories that
 ;; satisfy catfn.  Subexpressions that satisfy ign-cnd-fn are ignored, so
@@ -24,7 +24,7 @@
     (let* ((split
              (if (funcall ign-cnd-fn f)
                (list f nil)
-               (util:split-by-cond f catfn)))
+               (split-by-cond f catfn)))
            (no-sent-ops (first split))
            (sent-ops (second split))
            (recursed (mapcar #'(lambda (x)

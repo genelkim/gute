@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 ;; Give cl-ppcre a nickname.
 ;(defpackage cl-ppcre (:nicknames re))

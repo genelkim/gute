@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 (defun nilfn (x)
   "Function that just returns nil."

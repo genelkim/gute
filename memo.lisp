@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 ;; Memoization facility from Peter Norvig's PIOP
 ;; http://norvig.com/paip/auxfns.lisp

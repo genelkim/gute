@@ -3,8 +3,8 @@
 
 (in-package :cl-user)
 
-(defpackage :cl-util
-  (:nicknames :util)
+(defpackage :gene-utilities
+  (:nicknames :gute)
   (:use :cl :cl-user)
   (:shadowing-import-from :alexandria)
   (:shadowing-import-from :cl-ppcre)

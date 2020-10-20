@@ -1,6 +1,6 @@
 ;; Functions to help with regex, such as variants on cl-ppcre functions.
 
-(in-package :util)
+(in-package :gute)
 
 ;; Give cl-ppcre a nickname.
 (add-nickname "CL-PPCRE" "RE")

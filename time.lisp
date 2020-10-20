@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 ;;; Based on Rosetta Code: https://www.rosettacode.org/wiki/Time_a_function#Common_Lisp
 ;;; Returns the original output in a list and the elapsed time of running the

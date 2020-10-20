@@ -44,8 +44,8 @@
 (setf sb-ext:*on-package-variance* '(:warn t))
 ;; Load Util Choose between the following two lines depending on
 ;; whether you want the files compiled into FASLs or not:
-(asdf:operate 'asdf:load-op 'cl-util) ;; Compile and load as necessary
-;(asdf:operate 'asdf:load-source-op 'ttt) ;; Doesn't compile
+(asdf:operate 'asdf:load-op 'gute) ;; Compile and load as necessary
+;(asdf:operate 'asdf:load-source-op 'gute) ;; Doesn't compile
 ))
 
 

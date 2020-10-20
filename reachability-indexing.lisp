@@ -1,7 +1,7 @@
 ;; Reachability Indexing
 ;; Schubert, 2000-10-24
 
-(in-package :util)
+(in-package :gute)
 
 (defun reachable (node1 node2 inds ints)
   "Returns T if NODE1 is reachable via a downward path from NODE2;

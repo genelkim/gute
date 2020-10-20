@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 ;; Input data format:
 ;;   List of <boolean>
