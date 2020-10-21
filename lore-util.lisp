@@ -89,7 +89,6 @@
 ;; (NN dog (s)) -> (NN DOG {S})
 ;; (NN dog ()) -> (NN DOG {})
 (defun replace-lemma-parens (string)
-;; TODO: replace with cl-ppcre
   (re:regex-replace-all "\\(([^\\s\\(\\)]*)\\)"
                       string
                       "{\\1}"))
@@ -97,7 +96,6 @@
 
 ;; (NN DOG {S}) -> (|NN| DOG {S})
 (defun symbolize-node-tags (string)
-;; TODO: replace with cl-ppcre
   (re:regex-replace-all "\\(([^\\s\\)\\(]+)\\s+"
                       string
                       "(|\\1| "))
@@ -105,7 +103,6 @@
 
 ;; (|NN| DOG {S}) -> (|NN| |DOG {S}|)
 (defun symbolize-lemmas (string)
-;; TODO: replace with cl-ppcre
   (re:regex-replace-all "\\s+([^\\)\\(]+)\\)"
                       string
                       " |\\1|)"))
@@ -303,7 +300,6 @@
 (defun safe-cdddr (x) (if (listp x) (cdddr x)))
 
 ;; As in Python's re.sub.
-;; TODO: replace this with cl-ppcre
 (defun sub (pat repl str)
   (re:regex-replace-all pat str repl))
 
