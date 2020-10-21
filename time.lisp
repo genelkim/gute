@@ -7,6 +7,9 @@
 ;;; Optional parameter  `unit` can be
 ;;;   :real - for clock time
 ;;;   :base - for implementation-specific internal time
+(declaim (ftype (function (function &optional keyword)
+                          (values list rational &optional))
+                timing))
 (defun timing (function &optional (unit :real))
   (let* ((time-fn (case unit
                     (:real #'get-internal-real-time)

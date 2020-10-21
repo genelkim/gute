@@ -55,8 +55,10 @@
   (with-input-from-string (s str)
     (read-all-from-stream s)))
 
+(declaim (inline write-to-file))
 (defun write-to-file (str filename)
   "Writes a string to a file."
+  (declare (optimize (speed 1)))
   (declare (type simple-string str))
   (with-open-file (fh filename :direction :output)
     (format fh str)))

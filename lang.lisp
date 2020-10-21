@@ -25,30 +25,30 @@
   '(one once onetime un us))
 
 
+(declaim (inline vowel?))
 (defun vowel? (char)
   "Non-nil if a given character is a vowel."
+  (declare (type character char))
   (member char (list #\A #\O #\U #\I #\E)))
 
 
+(declaim (inline consonant?))
 (defun consonant? (char)
   "Non-nil if a given character is a consonant."
   (not (vowel? char)))
-
-
-(defun add-indefinite (common-noun)
-  "Concatenation of the common-noun with the proper indefinite article."
-  (declare (inline))
-  (mkstr (indefinite-article common-noun) " " common-noun))
 
 
 ;; Originally this returned "some" for plural terms, but 'plural?' is not
 ;; currently reliable, and it's not clear that this is desirable behavior
 ;; for all the places I want to use this function; I want this as a
 ;; replacement to the use of Knext's 'starts-with-vowel'.
+(declaim (inline indefinite-article))
 (defun indefinite-article (common-noun)
   "Returns 'a or 'an as appropriate."
-  (let* ((common-noun (tree-from-string (string common-noun) :gute))
-         (chars (coerce (string common-noun) 'list)))
+  (declare (type symbol common-noun))
+  (let* ((common-noun (tree-from-string (string (the symbol common-noun))
+                                        :gute))
+         (chars (coerce (string (the symbol common-noun)) 'list)))
     (cond ((member common-noun +consonant-exceptions+)
            'an)
           ((member common-noun +vowel-exceptions+)
@@ -81,6 +81,13 @@
            'an)
           ;; and 'a' for consonants
           (t 'a))))
+
+
+(defun add-indefinite (common-noun)
+  "Concatenation of the common-noun with the proper indefinite article."
+  (declare (type symbol common-noun))
+  (declare (inline indefinite-article))
+  (mkstr (indefinite-article common-noun) " " common-noun))
 
 
 (define-constant +number-regexps+
@@ -387,6 +394,7 @@
 (defun plural-of (common-noun)
   "Returns plural of common-noun as a string. If already plural then returns
    as-is."
+  (declare (optimize (speed 1)))
   (let ((common-noun (if (stringp common-noun) common-noun
                          (string-downcase (format nil "~a" common-noun)))))
 
@@ -404,6 +412,7 @@
 (defun singular-of (common-noun)
   "Returns singular form of common-noun as a string. If already singular then
    returns as-is."
+  (declare (optimize (speed 1)))
   (let ((common-noun (if (stringp common-noun) common-noun
                          (string-downcase (string common-noun)))))
     (multiple-value-bind (is-singular e)
@@ -417,6 +426,7 @@
    depending on the value of number ('singular or 'plural).
    number-entry refers to the entry in +number-regexps+ that we will be using
    to do the transformation."
+  (declare (optimize (speed 1)))
   (let (scanner parameters)
     (case number
       ;; if common-noun is becoming plural, then it currently matches singular,
@@ -459,6 +469,7 @@
 ;; to distinguish between simple past tense and past participles.
 (defun apply-ed (verb-string)
   "Takes a verb, as a string, applies -ED morphology, returns string."
+  (declare (optimize (speed 1)))
   (let ((vs (string-upcase (format nil "~a" verb-string))))
     (let* ((tokens (re:split " " vs))
            (last-word-tokens (re:split "_" (first (last tokens))))
@@ -5241,13 +5252,14 @@
 
 
 (defun present-singular (word)
+  (declare (optimize (speed 1)))
   (if (and (symbolp word)
            (member '#\_ (coerce (string (the symbol word)) 'list)))
       (let ((words (re:split "_" (string word))))
         (symb (format nil "~{~A~^_~}"
                       (cons (present-singular (intern (car words)))
                             (cdr words)))))
-      (let ((vs (string-upcase (string word))))
+      (let ((vs (string-upcase (if (symbolp word) (string word) word))))
         (setf vs (sub "([^AEIOU])Y$" "\\1IES" vs))
         (setf vs (sub "([XHO])$" "\\1ES" vs))
         (setf vs (sub "SS$" "SSES" vs))
@@ -5498,11 +5510,13 @@
     ;;  -> (() ((2 8)) ((18 24)) ((20 28))
     ;;      ((2 8) (18 24)) ((2 8) (20 28)))
     ((in-out-combos (spans start acc)
+       (declare (type list spans acc)
+                (type fixnum start))
        (cond
          ;; Reached the end.
          ((null spans) (list (reverse acc)))
          ;; We identified a span overlap so ignore current span.
-         ((< (caar spans) start) (in-out-combos (cdr spans) start acc))
+         ((< (the fixnum (caar spans)) start) (in-out-combos (cdr spans) start acc))
          ;; Recurse into both including and excluding the current span.
          (t (append
               ;; include
@@ -5512,6 +5526,7 @@
      ;; (2 8 18 24) ("can't" "I'll") "I cannot run, but I will not give up"
      ;; -> "I can't run, but I'll not give up"
      (apply-span-mappings (flat-spans map-strs cleanstr)
+       (declare (type simple-string cleanstr))
        (let* ((raw-spans (pair-up-list (append '(0) flat-spans (list (length cleanstr)))))
               (untouched-spans (mapcar
                                  #'(lambda (x) (subseq cleanstr (first x) (second x)))
