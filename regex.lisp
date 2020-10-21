@@ -1,26 +1,36 @@
 ;; Functions to help with regex, such as variants on cl-ppcre functions.
 
-(in-package :util)
+(in-package :gute)
 
 ;; Give cl-ppcre a nickname.
 (add-nickname "CL-PPCRE" "RE")
 
 ;; Same as cl-ppcre:all-matches, but handles overlapping matches.
+(declaim (ftype (function (simple-string simple-string
+                                         &key (:start fixnum) (:end fixnum))
+                          list)
+                overlap-regex-matches))
 (defun overlap-regex-matches (regex target-string &key
                                        (start 0) (end (length target-string)))
   (labels
     ((helper (curstart acc)
+       (declare (type fixnum curstart)
+                (type list acc))
        (multiple-value-bind (ms me) (re:scan regex target-string
                                              :start curstart :end end)
          (if (null ms)
            ;; Base case.
            (reverse acc)
            ;; Recursive case.
-           (helper (1+ ms) (cons me (cons ms acc)))))))
+           (helper (1+ (the fixnum ms)) (cons me (cons ms acc)))))))
     (helper start nil)))
 
 
 ;; Same as cl-ppcre:all-matches-as-strings, but handles overlapping matches.
+(declaim (ftype (function (simple-string simple-string
+                                         &key (:start fixnum) (:end fixnum))
+                          list)
+                overlap-regex-matches-as-strings))
 (defun overlap-regex-matches-as-strings (regex target-string &key
                                                (start 0) (end (length target-string)))
   (let*

@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 ;; Prints a hash-table readably.
 ;; https://github.com/phoe/phoe-toolbox/blob/master/phoe-toolbox.lisp
@@ -7,6 +7,7 @@
 (defun print-hash-table-readably (hash-table
                                   &optional (stream *standard-output*))
   "Prints a hash table readably using ALEXANDRIA:ALIST-HASH-TABLE."
+  (declare (optimize (speed 1)))
   (declare (type stream stream))
   (let ((test (hash-table-test hash-table))
         (*print-circle* t)
@@ -21,7 +22,10 @@
 ;; the original.
 (defun print-ht (ht &key (stream *standard-output*) (cutoff 10) (itemsep "~%"))
   "Prints a hash table readably to look like Python hash tables."
-  (declare (type stream stream))
+  (declare (optimize (speed 1)))
+  (declare (type stream stream)
+           (type simple-string itemsep)
+           (type fixnum cutoff))
   (let ((test (hash-table-test ht))
         (*print-circle* t)
         (*print-readably* t)
@@ -34,11 +38,14 @@
     (format stream "HASH-TABLE(TEST #'~A)~%{" test)
     (unless (null alist)
       (format stream "~S: ~S" (caar printlist) (cdar printlist)))
-    (mapc (lambda (kv) (format stream
-                               (concatenate 'string "," itemsep "~S: ~S")
-                               (car kv) (cdr kv)))
+    (mapc (lambda (kv)
+            (format stream ",")
+            (format stream itemsep)
+            (format stream "~S: ~S" (car kv) (cdr kv)))
           (cdr printlist))
     (when overmax
-      (format stream (concatenate 'string "," itemsep "...")))
+      (format stream ",")
+      (format stream itemsep)
+      (format stream "..."))
     (format stream "}")))
 

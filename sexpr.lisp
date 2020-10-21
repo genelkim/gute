@@ -3,7 +3,7 @@
 ;;
 ;; Utility functions over general s-expressions.
 
-(in-package :util)
+(in-package :gute)
 
 ;; Recurses through the s-expression, f, and extracts out categories that
 ;; satisfy catfn.  Subexpressions that satisfy ign-cnd-fn are ignored, so
@@ -18,13 +18,13 @@
 ;;                    #'numberp
 ;;                    #'(lambda (x) (<= (length x) 2)))
 ;;  -> '((a (2 b) c) (3))
-;;
 (defun extract-category (f catfn ign-cnd-fn)
+  (declare (optimize (speed 1)))
   (if (atom f) (list f '())
     (let* ((split
              (if (funcall ign-cnd-fn f)
                (list f nil)
-               (util:split-by-cond f catfn)))
+               (split-by-cond f catfn)))
            (no-sent-ops (first split))
            (sent-ops (second split))
            (recursed (mapcar #'(lambda (x)
@@ -37,6 +37,7 @@
 ;; Returns subexpressions in a tree that are the same as the given symbol and
 ;; the given equality test, similar to how subst works.
 (defun tree-find (tree sym &key (test #'eql))
+  (declare (optimize (speed 1)))
   (second (extract-category tree
             #'(lambda (x) (funcall test sym x))
             #'nilfn)))

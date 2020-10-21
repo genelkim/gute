@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 (defun read-file-lines (filename)
   "Reads a file line by line and return a list of strings."
@@ -21,8 +21,9 @@
     (let ((done nil)
           (acc '()))
       (loop while (not done)
-            do (multiple-value-bind (line done) 
-                   (read-line fh nil)
+            do (multiple-value-bind (line newdone)
+                                    (read-line fh nil)
+                 (setf done newdone)
                  (push line acc)))
       (reverse acc))))
 
@@ -54,8 +55,10 @@
   (with-input-from-string (s str)
     (read-all-from-stream s)))
 
+(declaim (inline write-to-file))
 (defun write-to-file (str filename)
   "Writes a string to a file."
+  (declare (optimize (speed 1)))
   (declare (type simple-string str))
   (with-open-file (fh filename :direction :output)
     (format fh str)))

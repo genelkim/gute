@@ -1,7 +1,7 @@
 ;; Reachability Indexing
 ;; Schubert, 2000-10-24
 
-(in-package :util)
+(in-package :gute)
 
 (defun reachable (node1 node2 inds ints)
   "Returns T if NODE1 is reachable via a downward path from NODE2;
@@ -11,6 +11,7 @@
    INTS must evaluate to the name of the indicator used to store
         the list of intervals of a node in the graph to which NODE1
         and NODE2 belong."
+  (declare (optimize (speed 1)))
   (prog (indices intervals)
         (setq indices (get node1 inds))
         (setq intervals (get node2 ints))
@@ -41,6 +42,7 @@
    positive integers, e.g., an INTS list might be ((1 . 3) (5 . 5) (8 . 9)).
    VIS ('visited') is used as a temporary flag. The VIS flags are reset
    to NIL at the end."
+  (declare (optimize (speed 1)))
   (let ((roots (remove-if #'(lambda (x) (get x in)) g))
         (cyclic nil) (cyclic-index nil)
         (i 1) ; 1st depth-first index that is to be used
@@ -103,7 +105,7 @@
    encountered in the depth-first search, and J is the next index that can
    be assigned to an edge, i.e., it is the highest index that was assigned,
    plus 1."
-
+  (declare (optimize (speed 1)))
   (let ((j i)
         (cyclic nil)
         cyclic-index)
@@ -146,6 +148,7 @@
    of Y, maintaining maximal, ascending, disjoint integer intervals;
    Besides changing the INTS property of Y, the function also returns
    the merged intervals."
+  (declare (optimize (speed 1)))
   (let ((intx (get x ints))
         (inty (get y ints))
         result) ; lists of intervals
@@ -188,6 +191,7 @@
 (defun add-to-indices (i r inds)
   "Add index I to the INDS list of vertex R, keeping the list in ascending
    order."
+  (declare (optimize (speed 1)))
   (let ((ii (get r inds)) (result nil))
     (do () ((or (null ii) (<= i (car ii)))) (push (pop ii) result))
     (if (and ii (= i (car ii)))
@@ -201,7 +205,7 @@
 (defun add-to-intervals (i r ints)
   "Add integer I to the INTS list of vertex R, maintaining maximal,
    ascending, disjoint intervals."
-
+  (declare (optimize (speed 1)))
   (let ((intr (get r ints)) result tail j k)
     (do () ((or (null intr) (< (- i 2) (cdar intr))))
       (push (pop intr) result) )
@@ -225,7 +229,7 @@
 ;; Schubert, 1997-10-14; tested
 (defun subsumes-intervals (x y ints)
   "Return T iff the INTS-intervals of X contain all the INTS-intervals of Y."
-
+  (declare (optimize (speed 1)))
   (let ((intx (get x ints))
         (inty (get y ints)))
     (do (i1 i2 j1 j2) ((null inty))

@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 (defmacro define-constant (name value &optional doc)
   "ANSI compliant, robust version of defconstant."

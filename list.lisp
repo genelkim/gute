@@ -1,18 +1,23 @@
 
-(in-package :util)
+(in-package :gute)
 
 
+(declaim (inline insert))
 (defun insert (x lst i)
   "Inserts X to LST at position I.
   Destructive."
+  (declare (optimize (speed 1)))
+  (declare (type fixnum i))
   (if (= i 0)
     (push x lst)
     (push x (cdr (nthcdr (1- i) lst))))
   lst)
 
+(declaim (inline insert-end))
 (defun insert-end (x lst)
   "Inserts X to LST at the rightmost position.
   Destructive."
+  (declare (optimize (speed 1)))
   (insert x lst (length lst)))
 
 (defun slice (lst start end)
@@ -107,7 +112,7 @@
   (labels
     ((helper (acc cur)
        (let ((lst+ (first acc))
-             (curidx (second acc)))
+             (curidx (the fixnum (second acc))))
          (list (cons (list curidx cur) lst+) (1+ curidx)))))
     ;; strip off the counter and reverse.
     (reverse (first (reduce #'helper lst :initial-value (list nil 0))))))

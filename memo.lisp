@@ -1,5 +1,5 @@
 
-(in-package :util)
+(in-package :gute)
 
 ;; Memoization facility from Peter Norvig's PIOP
 ;; http://norvig.com/paip/auxfns.lisp
@@ -11,6 +11,8 @@
 
 (defun memo (fn &key (key #'identity) (test #'equal) name)
   "Return a memo-function of fn."
+  (declare (type function fn key test)
+           (type symbol name))
   (let ((table (make-hash-table :test test)))
     (setf (get name 'memo) table)
     #'(lambda (&rest args)

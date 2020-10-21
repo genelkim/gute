@@ -1,12 +1,14 @@
 
-(in-package :util)
+(in-package :gute)
 
 ;; Input data format:
 ;;   List of <boolean>
 ;; Returns the precision (<number true>/<total number>).
 (defun precision (data &key (make-float t))
+  (declare (optimize (speed 1)))
   (declare (type list data))
-  (let* ((num (length (remove-if-not #'(lambda (x) x) data)))
+  (let* ((num (length (remove-if-not #'(lambda (x) (the boolean x))
+                                     data)))
          (den (length data))
          (rat
           (if (= 0 den) nil
@@ -50,7 +52,7 @@
 ;;   List of (category . <boolean>)
 ;; Returns the micro precision -- average precision over the categories.
 (defun micro-precision (data)
-  (cl-mathmean (mapcar #'second (group-precisions data))))
+  (mean (mapcar #'second (group-precisions data))))
 
 ;; Cartesian product of n lists.
 ;;  ((a b) (1 2) (x y))

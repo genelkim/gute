@@ -6,16 +6,16 @@
 ;; Benjamin Van Durme, 2007-10-12
 ;; Jonathan Gordon, 2014-01-06
 
-(in-package :util)
+(in-package :gute)
 
 ;; Give cl-ppcre a nickname.
 ;;(defpackage cl-ppcre (:nicknames re))
 (add-nickname "CL-PPCRE" "RE")
 
-(define-constant eof (gensym))
+;(define-constant eof (gensym))
 
 (defmacro do-lines (var path &rest body)
-  (alexandria:with-gensyms (p str)
+  (alexandria:with-gensyms (p str eof)
     `(let ((,p (probe-file ,path)))
        (when ,p
          (with-infile ,str ,p
@@ -26,7 +26,7 @@
 
 
 (defmacro do-lines-slurp (var path &rest body)
-  (alexandria:with-gensyms (p str)
+  (alexandria:with-gensyms (p str eof)
     `(let ((,p (slurp ,path)))
        (with-input-from-string (,str ,p)
          (do ((,var (read-line ,str nil ,eof)
@@ -71,8 +71,8 @@
       seq)))
 
 
+(declaim (ftype (function (* package) *) intern-symbols-recursive))
 (defun intern-symbols-recursive (tree package)
-  ;(list tree package))
   (cond ((null tree) nil)
         ((or (numberp tree) (stringp tree) (functionp tree))
          tree)
@@ -89,7 +89,6 @@
 ;; (NN dog (s)) -> (NN DOG {S})
 ;; (NN dog ()) -> (NN DOG {})
 (defun replace-lemma-parens (string)
-;; TODO: replace with cl-ppcre
   (re:regex-replace-all "\\(([^\\s\\(\\)]*)\\)"
                       string
                       "{\\1}"))
@@ -97,7 +96,6 @@
 
 ;; (NN DOG {S}) -> (|NN| DOG {S})
 (defun symbolize-node-tags (string)
-;; TODO: replace with cl-ppcre
   (re:regex-replace-all "\\(([^\\s\\)\\(]+)\\s+"
                       string
                       "(|\\1| "))
@@ -105,12 +103,12 @@
 
 ;; (|NN| DOG {S}) -> (|NN| |DOG {S}|)
 (defun symbolize-lemmas (string)
-;; TODO: replace with cl-ppcre
   (re:regex-replace-all "\\s+([^\\)\\(]+)\\)"
                       string
                       " |\\1|)"))
 
 
+(declaim (ftype (function (string &optional (or package keyword)) *) tree-from-string))
 (defun tree-from-string (string &optional (package *package*))
   "Takes a string representing a tree, returns a lisp object.
    Assumes tree is represented as embedded parenthesis.
@@ -140,7 +138,7 @@
 
    By default assumes x and y are lists or vectors of ints sorted least to
    greatest."
-
+  (declare (optimize (speed 1)))
   (let ((a (if (vectorp x) x (apply #'vector x)))
         (b (if (vectorp y) y (apply #'vector y))))
     (loop
@@ -221,12 +219,14 @@
 ;    (rec x nil)))
 
 
+(declaim (ftype (function (symbol) boolean) contains-underscore))
 (defun contains-underscore (atm)
   ;; Schubert, 2010-08-19
   (member #\_ (coerce (string atm) 'list)))
 
 
 ;; Schubert, 2010-08-19
+(declaim (ftype (function (symbol character) list) split-at-char))
 (defun split-at-char (atm c)
   "Split the given literal atom into a part ending in an underscore
    and a part after the underscore; If there is no underscore, return
@@ -238,10 +238,10 @@
         (setq test (member c chars))
         (if (null test)
             (return nil))
-        (setq l (1- (length test))) ; length of 'test' atom
+        (setq l (1- (length (the list test)))) ; length of 'test' atom
         (if (zerop l)
             (setq test nil)
-          (setq test (intern (coerce (cdr test) 'string))) )
+          (setq test (intern (coerce (the list (cdr test)) 'string))))
         (setq metavar (intern (coerce (butlast chars l) 'string)))
         (return (list metavar test))))
 
@@ -254,17 +254,21 @@
 ;; hash where the value is meaningless and all we care about is whether
 ;; an element is present).
 (defun memberp (x listy)
+  (declare (optimize (speed 1)))
+  (declare (type (or list hash-table) listy))
   (if (hash-table-p listy)
       (gethash x listy)
       (not (null (member x listy)))))
 
 
+(declaim (ftype (function (symbol symbol symbol) symbol) subst-in-symb))
 (defun subst-in-symb (symb old new)
   (intern (re:regex-replace-all (string old) (string symb) (string new))))
 
 
 ;; Source: Paul Graham, 'On Lisp'
 (defun prune (test tree)
+  (declare (optimize (speed 1)))
   (labels ((rec (tree acc)
              (cond ((null tree) (nreverse acc))
                    ((consp (car tree))
@@ -296,7 +300,6 @@
 (defun safe-cdddr (x) (if (listp x) (cdddr x)))
 
 ;; As in Python's re.sub.
-;; TODO: replace this with cl-ppcre
 (defun sub (pat repl str)
   (re:regex-replace-all pat str repl))
 
