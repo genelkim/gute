@@ -49,24 +49,55 @@
         (when char2 (unread-char char2 s))
         (when char1 (unread-char char1 s))))))
 
-(defun read-all-from-stream (s)
+(defun read-all-from-stream (s &optional (placeholder-base 'gute-block-comment))
   "Reads all s-expressions from a character stream until exhausted. It will
   raise an eof-error if the stream does not represent a sequence of
-  s-expresssions. Comments are ignored, however, currently block comments
-  that come after the last s-expression will cause an eof-error."
-  ; TODO: Support block comments that come after the last s-expression.
-  (labels
-    ((helper (in acc)
-       ;; Read off all comments and whitespace.
-       (loop while (eql #\; (peek-char t in nil))
-             do (read-line in nil))
-       (if (not (peek-char t in nil))
-         ;; End of file---NB: neither () or nil are single-characters.
-         acc
-         ;; Recurse.
-         (let ((expr (read in)))
-           (helper in (cons expr acc))))))
-    (reverse (helper s nil))))
+  s-expresssions. Comments are ignored.
+
+  The handling of file-ending block comments are done by redefining the block
+  comment dispatch function to return the concatenation of a generated symbol
+  and a specific base symbol. This is only checked when we come across a #\#
+  macro dispatch, so the method will fail if some other #\# dispatch macro
+  returns this symbol. This is extremely unlikely, but not impossible.
+
+  The optional argument placeholder-base allows the caller to specify a
+  placeholder that is known to not conflict with any read result."
+  (let ((prior-block-comment-dispatch
+          (get-dispatch-macro-character #\# #\|))
+        ;; Generate placeholder constant.
+        (placeholder-const (fuse-into-atom (list (gensym) placeholder-base)))
+        result)
+    ;; Set our custom block comment dispatch function.
+    ;; Does exactly what we'd do before, but returns a placeholder symbol.
+    (set-dispatch-macro-character #\# #\|
+      #'(lambda (s c n)
+          (funcall prior-block-comment-dispatch s c n)
+          placeholder-const))
+    (labels
+      ((helper (in acc)
+         ;; Read off all comments and whitespace.
+         (loop while (eql #\; (peek-char t in nil))
+               do (read-line in nil))
+         (if (not (peek-char t in nil))
+           ;; End of file---NB: neither () or nil are single-characters.
+           acc
+           ;; Recurse.
+           (let ((first-char (peek-char t in nil))
+                 (expr (read in))
+                 (newacc))
+             ;; If the first character is # check whether the read expression is
+             ;; a block comment via the locally defined reader result. If so,
+             ;; ignore.
+             (setf newacc (if (and (eql first-char #\#)
+                                   (equal expr placeholder-const))
+                            acc
+                            (cons expr acc)))
+             (helper in newacc)))))
+      (setf result (reverse (helper s nil)))
+      ;; Reinstate old dispatch function.
+      (set-dispatch-macro-character #\# #\| prior-block-comment-dispatch)
+      ;; Return result
+      result)))
 
 (defun read-all-from-file (filename)
   "Reads all s-expressions from the given file until exhausted.
