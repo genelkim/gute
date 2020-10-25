@@ -27,15 +27,44 @@
                  (push line acc)))
       (reverse acc))))
 
+; NOT FUNCTONAL: Two consecutive unread-char operations are not permitted.
+(defun read-block-comment (s)
+  "Reads off a block comment (#| ... |#) from the stream. If the stream does
+  not start with #|, nothing occurs. Return value is undefined. Raises and
+  eof-error if the stream ends without completion of the block comment."
+  (let (char1 char2 (nestlvl 1))
+    (if (and (eql #\# (setf char1 (read-char s nil 'eof)))
+             (eql #\| (setf char2 (read-char s nil 'eof))))
+      (do ((char1 char2 char2)
+           (char2 (read-char s) (read-char s)))
+          ;; End if we are about to decrement to nesting level 0. This
+          ;; pre-empting avoids an eof-error when the stream ends exactly as
+          ;; the block comment ends.
+          ((and (= 1 nestlvl) (eql #\| char1) (eql #\# char2)))
+        (cond
+          ((and (eql #\# char1) (eql #\| char2)) (incf nestlvl))
+          ((and (eql #\| char1) (eql #\# char2)) (decf nestlvl))))
+      ;; Restore any read characters in the test.
+      (progn
+        (when char2 (unread-char char2 s))
+        (when char1 (unread-char char1 s))))))
+
 (defun read-all-from-stream (s)
-  "Reads all s-expressions from a character stream until exhausted. 
-  It will raise an error if the stream does not represent a sequence of
-  s-expresssions."
+  "Reads all s-expressions from a character stream until exhausted. It will
+  raise an eof-error if the stream does not represent a sequence of
+  s-expresssions. Comments are ignored, however, currently block comments
+  that come after the last s-expression will cause an eof-error."
+  ; TODO: Support block comments that come after the last s-expression.
   (labels
     ((helper (in acc)
-       (let ((expr (read in nil)))
-         (if (null expr)
-           acc
+       ;; Read off all comments and whitespace.
+       (loop while (eql #\; (peek-char t in nil))
+             do (read-line in nil))
+       (if (not (peek-char t in nil))
+         ;; End of file---NB: neither () or nil are single-characters.
+         acc
+         ;; Recurse.
+         (let ((expr (read in)))
            (helper in (cons expr acc))))))
     (reverse (helper s nil))))
 
