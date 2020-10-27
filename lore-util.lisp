@@ -71,7 +71,7 @@
       seq)))
 
 
-(declaim (ftype (function (* package) *) intern-symbols-recursive))
+(declaim (ftype (function (* (or symbol package)) *) intern-symbols-recursive))
 (defun intern-symbols-recursive (tree package)
   (cond ((null tree) nil)
         ((or (numberp tree) (stringp tree) (functionp tree))

@@ -14,6 +14,7 @@
   t)
 
 (declaim (inline compose))
+(declaim (ftype (function (&rest (or function symbol)) function) compose))
 (defun compose (&rest args)
   "Composes any number of one argument functions."
   (declare (optimize (speed 1)))
