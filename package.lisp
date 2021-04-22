@@ -43,6 +43,7 @@
     powerset
     permute
     label-with-num
+    alist-keys
 
     ;; string.lisp
     trim
@@ -57,6 +58,7 @@
     extract-category
     tree-find
     tree-find-if
+    tree-depth
 
     ;; symbol.lisp
     split-into-atoms
