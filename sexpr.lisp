@@ -49,3 +49,9 @@
   (second (extract-category tree cndfn
             #'nilfn)))
 
+(defun tree-depth (tree)
+  (cond
+    ((atom tree) 0)
+    (t
+     (1+ (apply #'max (mapcar #'tree-depth tree))))))
+
