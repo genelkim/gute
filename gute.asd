@@ -1,7 +1,7 @@
 (asdf:defsystem :gute
   :name "Gene's Utilities"
   :serial t
-  :version "1.0.0"
+  :version "1.0.1"
   :description "Gene's personal kitchen sink library."
   :author "Gene Louis Kim <gkim21@cs.rochester.edu>"
   :license "MIT"
@@ -23,9 +23,21 @@
                (:file "stats")
                (:file "memo")
                (:file "queue")
-               (:file "time"))
+               (:file "time")
+               (:file "random"))
   :around-compile (lambda (next)
                     ; For development use (debug 3) (safety 3) (space 1) (speed 1)
                     (proclaim '(optimize (debug 0) (safety 2) (space 1) (speed 3)))
-                    (funcall next)))
+                    (funcall next))
+  :in-order-to ((test-op (test-op :gute/tests))))
+
+(asdf:defsystem :gute/tests
+  :serial t
+  :description "Tests for the GUTE library"
+  :author "Gene Louis Kim <gkim21@cs.rochester.edu>"
+  :license "MIT"
+  :depends-on (:gute :lisp-unit)
+  :components ((:file "test/package")
+               (:file "test/random"))
+  :perform (test-op (o c) (symbol-call :gute/tests :run)))
 

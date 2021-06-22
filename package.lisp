@@ -153,5 +153,9 @@
 
     ;; time.lisp
     timing
+    
+    ;; random.lisp
+    set-seed
+    uniform-sample
     ))
 
