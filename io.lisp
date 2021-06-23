@@ -84,8 +84,6 @@
   (with-open-file (s filename)
     (read-all-from-stream s)))
 
-;; TODO: move this to string-ops.lisp or maybe stream.lisp once this directory
-;; is packaged and internal dependencies are better managed.
 (defun read-all-from-string (str)
   "Reads all s-expressions from the given string.
   Raises an error if the string does not represent a series of valid

@@ -5552,23 +5552,6 @@
               (apply-span-mappings flat-spans map-strs str)))
         possible-spans))))
 
-;; TODO: we could make the function below more efficient by turning it into a regex and doing
-;; a single comparison..
-;; == example above ==
-;; "I cannot run, but I will not give up"
-;; -> ("I cannot run, but I will not give up"
-;;     "I can't run, but I will not give up"
-;;     "I cannot run, but I won't give up"
-;;     "I can't run, but I won't give up")
-;;
-;; == becomes ==
-;; "I cannot run, but I will not give up"
-;; -> "I (cannot|can't) run, but I (will not|won't) give up"
-;;
-;; == a bit more complicated for regex... ==
-;;  might consider using the Aho-Corasick algorithm, available http://clstringmatch.sourceforge.net/
-;;
-
 ;; Generates a list of possible rewritings of the given sentence by adding
 ;; contractions. If possible contraction points overlap, then possibilities
 ;; will be handled for each of these choices.

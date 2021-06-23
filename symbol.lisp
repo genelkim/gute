@@ -14,7 +14,6 @@
 ;``````````````````````````````
 ; Make a single atom out of the list of atoms
 ; e.g., (fuse-into-atom '(this - and - that)) --> THIS-AND-THAT
-;; TODO: make this more robust to catch any locked package, not just COMMON-LISP.
   (declare (optimize (speed 1)))
   (intern (apply #'concatenate 'string
                  (mapcar #'(lambda (x)
