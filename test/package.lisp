@@ -32,7 +32,6 @@
                              "Both the :tags and :tests keyword "
                              "arguments are given for gute/tests:run. "
                              "Ignoring the :tags argument...")))
-        ; The gute dependency is available via the gute package.
         (in-intern (tests pkgtests :gute/tests)
           (lisp-unit:run-tests pkgtests :gute/tests)))
       ;; Specified tags.
