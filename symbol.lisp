@@ -32,7 +32,7 @@
 ;; bgnval: initial symbol or s-expr of symbols
 ;; midval: name of variable storing bgnvar after it is interned into the ulf-lib package
 ;; callpkg: optional argument for the package that the output should be interned to
-;;          if nil, it defaults to the value *ulf-lib-caller-pkg*
+;;          if nil, it defaults to the value *intern-caller-pkg*
 ;; body: body of the code (using midval)
 ;; outval: immediate output of the body
 (defmacro inout-intern ((bgnval midval inpkg &key (callpkg nil)) &body body)
