@@ -157,5 +157,6 @@
     ;; random.lisp
     set-seed
     uniform-sample
+    categorical-sample
     ))
 
