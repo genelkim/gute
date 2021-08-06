@@ -23,11 +23,10 @@
    n : the number of samples desired"
   ;; NB: d0 ending ensures double floats for precision.
   (let ((sample-vals 
-          (sort (loop for x from 0 upto n collect (random 1.0d0))
+          (sort (loop for x from 0 below n collect (random 1.0d0))
                 #'<))
         (curval 0.0d0)
         samples)
-    (format t "sample-vals: ~s~%" sample-vals)
     (loop for (c . w) in cats
           do (incf curval w)
           do (loop while (and sample-vals
