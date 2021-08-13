@@ -17,10 +17,11 @@
     (setf (get name 'memo) table)
     #'(lambda (&rest args)
         (let ((k (funcall key args)))
-          (multiple-value-bind (val found-p)
-              (gethash k table)
-            (if found-p val
-                (setf (gethash k table) (apply fn args))))))))
+          (multiple-value-bind (val found-p) (gethash k table)
+            (values-list
+              (if found-p val
+                  (setf (gethash k table)
+                        (multiple-value-list (apply fn args))))))))))
 
 ;; NB: This doesn't work on self-recursive functions.
 ;; Use (setf (fdefinition fn-name) (memo #'fn)) for those cases.
