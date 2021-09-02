@@ -91,18 +91,16 @@
   (with-input-from-string (s str)
     (read-all-from-stream s)))
 
-(declaim (inline write-to-file))
-(defun write-to-file (str filename)
+(defmacro write-to-file (str filename &rest openargs)
   "Writes a string to a file."
   (declare (optimize (speed 1)))
-  (declare (type simple-string str))
-  (with-open-file (fh filename :direction :output)
-    (format fh str)))
+  `(with-open-file (fh ,filename :direction :output ,@openargs)
+    (format fh ,str)))
 
-(defun write-list-to-file (lst filename &optional (sep "~%"))
+(defmacro write-list-to-file (lst filename &optional (sep "~%") &rest openargs)
   "Writes a list to a file.
   Depends on write-to-file."
-  (write-to-file (list-to-string lst sep) filename))
+  `(write-to-file (list-to-string ,lst ,sep) ,filename ,@openargs))
 
 (defun princln (x)
   "CL version of 'println' in Java.
