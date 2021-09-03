@@ -56,6 +56,8 @@
 
 ;; Converts a list to a string with a given delimiter between elements.
 ;; Elements are represented with the usual string representation.
+(declaim (ftype (function (list string &optional boolean) string)
+                list-to-string))
 (defun list-to-string (lst delim &optional (remove-newlines nil))
   (reduce
     #'(lambda (x y)

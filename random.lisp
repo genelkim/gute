@@ -11,3 +11,27 @@
   (loop for i from 1 to n
         collect (nth (random (length lst)) lst)))
 
+; TODO: write a more efficient version https://github.com/enewe101/categorical
+(defun categorical-sample (cats &optional (n 1))
+  "Samples from a categorical distribution.
+   
+   NB: The results will be sorted in the reverse order of cats.
+
+   Arguments
+   ---------
+   cats : a association list from categories to weights to sample from
+   n : the number of samples desired"
+  ;; NB: d0 ending ensures double floats for precision.
+  (let ((sample-vals 
+          (sort (loop for x from 0 below n collect (random 1.0d0))
+                #'<))
+        (curval 0.0d0)
+        samples)
+    (loop for (c . w) in cats
+          do (incf curval w)
+          do (loop while (and sample-vals
+                              (< (car sample-vals) curval))
+                   do (push c samples)
+                   do (setf sample-vals (cdr sample-vals))))
+    samples))
+
