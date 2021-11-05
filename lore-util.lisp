@@ -71,7 +71,7 @@
       seq)))
 
 
-(declaim (ftype (function (* (or symbol package)) *) intern-symbols-recursive))
+(declaim (ftype (function (t (or symbol package)) t) intern-symbols-recursive))
 (defun intern-symbols-recursive (tree package)
   (cond ((null tree) nil)
         ((or (numberp tree) (stringp tree) (functionp tree))
@@ -108,7 +108,7 @@
                       " |\\1|)"))
 
 
-(declaim (ftype (function (string &optional (or package keyword)) *) tree-from-string))
+(declaim (ftype (function (string &optional (or package keyword)) t) tree-from-string))
 (defun tree-from-string (string &optional (package *package*))
   "Takes a string representing a tree, returns a lisp object.
    Assumes tree is represented as embedded parenthesis.
