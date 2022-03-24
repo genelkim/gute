@@ -120,3 +120,10 @@
 (defun alist-keys (alist)
   (mapcar #'car alist))
 
+(defun num-leaves (tree)
+  "Count the number of leaves in a tree."
+  (if (listp tree)
+      (let ((c 0))
+           (loop for node in tree do (setf c (+ c (num-leaves node))))
+           c)
+      1))
