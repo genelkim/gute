@@ -44,6 +44,7 @@
     permute
     label-with-num
     alist-keys
+    num-leaves
 
     ;; string.lisp
     trim
