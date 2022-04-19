@@ -5,7 +5,7 @@
   :description "Gene's personal kitchen sink library."
   :author "Gene Louis Kim <gkim21@cs.rochester.edu>"
   :license "MIT"
-  :depends-on (:alexandria (:version #:cl-ppcre "2.0.4")
+  :depends-on (:alexandria :bordeaux-threads (:version #:cl-ppcre "2.0.4")
                :cl-mathstats :cl-strings :conium)
   :components ((:file "package")
                (:file "general")
