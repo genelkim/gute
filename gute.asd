@@ -1,7 +1,7 @@
 (asdf:defsystem :gute
   :name "Gene's Utilities"
   :serial t
-  :version "1.0.3"
+  :version "1.0.4"
   :description "Gene's personal kitchen sink library."
   :author "Gene Louis Kim <gkim21@cs.rochester.edu>"
   :license "MIT"

@@ -55,3 +55,9 @@
     (t
      (1+ (apply #'max (mapcar #'tree-depth tree))))))
 
+(defun get-subtrees (tree)
+  "Returns a list of all subtrees of the tree, including the tree itself."
+  (cond
+    ((atom tree) (list tree))
+    (t (cons tree (apply #'append (mapcar #'subtrees tree))))))
+

@@ -60,6 +60,7 @@
     tree-find
     tree-find-if
     tree-depth
+    get-subtrees
 
     ;; symbol.lisp
     split-into-atoms
