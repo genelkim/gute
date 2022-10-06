@@ -160,5 +160,8 @@
     set-seed
     uniform-sample
     categorical-sample
+
+    ;; clos.lisp
+    clos-equality-constructor
     ))
 

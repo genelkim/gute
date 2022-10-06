@@ -1,7 +1,7 @@
 (asdf:defsystem :gute
   :name "Gene's Utilities"
   :serial t
-  :version "1.0.4"
+  :version "1.0.5"
   :description "Gene's personal kitchen sink library."
   :author "Gene Louis Kim <gkim21@cs.rochester.edu>"
   :license "MIT"
@@ -24,7 +24,8 @@
                (:file "memo")
                (:file "queue")
                (:file "time")
-               (:file "random"))
+               (:file "random")
+               (:file "clos"))
   :around-compile (lambda (next)
                     ; For development use (debug 3) (safety 3) (space 1) (speed 1)
                     (proclaim '(optimize (debug 0) (safety 2) (space 1) (speed 3)))
