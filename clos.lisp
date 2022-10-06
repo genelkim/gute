@@ -12,7 +12,6 @@
         #'(lambda (slot-equality-cons)
             (let ((slot (car slot-equality-cons))
                   (equality-fn (cdr slot-equality-cons)))
-              (format t "slot: ~s~%" slot)
               (funcall equality-fn
                        (slot-value obj1 slot)
                        (slot-value obj2 slot))))
