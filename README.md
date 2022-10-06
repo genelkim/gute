@@ -9,5 +9,5 @@ Much of the code is copied over (and refactored) from the Lore project by
 Jonathan Gordon and Benjamin Van Durme. The files are named to reflect the
 content inside. Please read the comments in the files to get the details.
 
-You can add an issue or contact me at <gkim21@cs.rochester.edu> to report bugs.
+You can add an issue or contact me at <genekim@usf.edu> to report bugs.
 
